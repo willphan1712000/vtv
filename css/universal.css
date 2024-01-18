@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Asap&family=Exo+2:wght@200&family=Josefin+Sans:wght@200&family=Macondo&family=Oleo+Script&family=Pacifico&family=Playfair+Display:ital@1&family=Tapestry&family=Titillium+Web:wght@200&family=Yanone+Kaffeesatz:wght@300&family=Zen+Loop:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Joan&family=Lora:ital,wght@1,500&family=Montserrat:wght@500&family=Nunito+Sans:ital,wght@1,300&family=Playfair+Display:ital,wght@1,600&family=Roboto+Slab&family=Source+Sans+Pro&family=Tai+Heritage+Pro&family=Ubuntu&display=swap');
+:root {
+   --main-color: #25476a;
+   --before-gradient-color: #486b8e;
+   --gradient-color: #486b8e;
+   --before-hover-color: #25476a;
+   --hover-color: #486b8e;
+}
+* {
+   padding: 0;
+   margin: 0;
+   box-sizing: border-box;
+   font-family: 'Asap', sans-serif;
+   /* color: #000; */
+   /* link 1 */
+   /* font-family: 'Exo 2', sans-serif; */
+   /* font-family: 'Josefin Sans', sans-serif; */
+   /* font-family: 'Macondo', cursive; */
+   /* font-family: 'Oleo Script', cursive; */
+   /* font-family: 'Pacifico', cursive; */
+   /* font-family: 'Playfair Display', serif; */
+   /* font-family: 'Tapestry', cursive; */
+   /* font-family: 'Titillium Web', sans-serif; */
+   /* font-family: 'Yanone Kaffeesatz', sans-serif; */
+   /* font-family: 'Zen Loop', cursive; */
+   /* link 2 */
+   /* font-family: 'Bebas Neue'; */
+   /* font-family: 'Joan'; */
+   /* font-family: 'Lora'; */
+   /* font-family: 'Montserrat'; */
+   /* font-family: 'Nunito Sans'; */
+   /* font-family: 'Playfair Display'; */
+   /* font-family: 'Roboto Slab'; */
+   /* font-family: 'Source Sans Pro'; */
+   /* font-family: 'Tai Heritage Pro'; */
+   /* font-family: 'Ubuntu'; */
+}
+.colorConceptActive {
+   background-color: var(--main-color);
+   border-radius: 15% 0 0 15%;
+}
+.errorFocusActive {
+   border: 2px solid red;
+}
+input:focus {
+   outline: none !important;
+   border: 2px solid var(--main-color);
+   box-shadow: 0 0 10px #719ECE;
+}
+#networkStatus {
+   position: absolute;
+   left: 20px;
+   bottom: 20px;
+   border-radius: 10px;
+   padding: 20px;
+   background-color: #f0f0f0;
+   z-index: 9;
+   display: none;
+}
+ /* RESPONSIVE FOR DEVICES THAT ARE NOT SUPPORTED */
+ @media only screen and (max-width: 340px) {
+   body {
+      display: none;
+   }
+}

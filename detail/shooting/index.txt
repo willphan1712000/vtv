@@ -1,0 +1,9 @@
+<section class="shooting-star">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</section>

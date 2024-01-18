@@ -1,0 +1,3 @@
+<div class="textSlider__left"></div>
+<div class="slider"></div>
+<div class="textSlider__right"></div>
