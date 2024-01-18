@@ -6,10 +6,10 @@
 
     // Database Information
     $servername = "localhost:3306";
-    $username = "root";
-    // $username = "allincli_ssadmin";
-    $password= "";
-    // $password= "123456";
+    // $username = "root";
+    $username = "allincli_ssadmin";
+    // $password= "";
+    $password= "123456";
     $dbName = "allincli_vtv_".str_replace('.','_',basename(dirname(__DIR__)));
 
     $year = 2023;
