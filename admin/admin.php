@@ -52,6 +52,7 @@ while($row = mysqli_fetch_array($countQuery)) {
 		var id = "<?= $title;?>";
 		var version = "<?= $v;?>";
 		var copyright  = "<?= $copyright;?>"
+		var type = "admin"
 	</script>
 	<script type="module" src="/js/main.js?v=<?=$v;?>" defer></script>
     <script type="module" src="/js/upload.js?v=<?= $v;?>" defer></script>

@@ -46,10 +46,9 @@ if(isset($_POST['back'])) {
 	<script>
 		var numoftheme = <?=$numoftheme;?>;
 		var id = "<?= $title;?>";
+		type = 'theme'
 	</script>
-	<script src="/js/checkSubs.js?v=<?php echo $v;?>"></script>
+	<script type="module" src="/js/main.js?v=<?=$v;?>" defer></script>
     <script src="/js/theme.js?v=<?php echo $v;?>" defer></script>
-    <script src="/js/colorConcept.js?v=<?php echo $v;?>"></script>
-    <script src="/js/preventDefault.js?v=<?php echo $v;?>"></script>
 </body>
 </html>

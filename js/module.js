@@ -1,4 +1,4 @@
-function TransformTouch(ele1, ele2) {
+function Transform(ele1, ele2) {
     this.ele1 = ele1
     this.ele2 = ele2
     this.collided = false
@@ -8,6 +8,7 @@ function TransformTouch(ele1, ele2) {
     this.angle = 0
     const $ele1 = $(this.ele1)
     const $ele2 = $(this.ele2)
+    const thisObject = this
     
     this.setValue = function(x, y, scale, angle) {
         this.x = (x !== undefined) ? x : this.x
@@ -15,8 +16,8 @@ function TransformTouch(ele1, ele2) {
         this.scale = (scale !== undefined) ? scale : this.scale
         this.angle = (scale !== undefined) ? angle : this.angle
     }
-    this.performTransform = function($ele, x, y, scale, angle) {
-        $ele.css({
+    this.performTransform = function(x, y, scale, angle) {
+        $ele1.css({
             transform: `translate(${x}px, ${y}px) scale(${scale}) rotate(${angle}deg)`
         })
     }
@@ -33,30 +34,28 @@ function TransformTouch(ele1, ele2) {
         this.collided = is
     }
 
-    const thisObject = this
     this.draggable = function() {
+        let iPosX, iPosY, posX, posY, dX, dY
         $ele1.on("touchstart", function(e) {
-            e.preventDefault() // Prevent the page from scrolling
-            e.stopPropagation() // Prevent the finger from touching another element that is overlapped by the targeted element
-            if(e.targetTouches.length >= 1) {
-                let iPosX = e.targetTouches[0].clientX
-                let iPosY = e.targetTouches[0].clientY
-                let [posX, posY, scale, angle] = thisObject.exportData()
-                $(this).on("touchmove", function(e) {
-                    let dX = e.targetTouches[0].clientX - iPosX
-                    let dY = e.targetTouches[0].clientY - iPosY
-                    iPosX = e.targetTouches[0].clientX
-                    iPosY = e.targetTouches[0].clientY
-                    posX += dX
-                    posY += dY
-                    thisObject.performTransform($(this), posX, posY, scale, angle)
-                })
-                $(this).on("touchend", function() {
-                    $(this).off("touchmove", null)
-                    $(this).off("touchend", null)
-                    thisObject.setValue(posX, posY, undefined, undefined)
-                })
-            }
+            e.preventDefault()
+            e.stopPropagation()
+            iPosX = e.touches[0].clientX
+            iPosY = e.touches[0].clientY
+            let [posX, posY, scale, angle] = thisObject.exportData()
+            $ele1.on("touchmove", function(e) {
+                dX = e.touches[0].clientX - iPosX
+                dY = e.touches[0].clientY - iPosY
+                iPosX = e.touches[0].clientX
+                iPosY = e.touches[0].clientY
+                posX += dX
+                posY += dY
+                thisObject.performTransform(posX, posY, scale, angle)
+            })
+            $ele1.on("touchend", function() {
+                $ele1.off("touchmove", null)
+                $ele1.off("touchend", null)
+                thisObject.setValue(posX, posY, undefined, undefined)
+            })
         })
         return this
     }
@@ -65,41 +64,41 @@ function TransformTouch(ele1, ele2) {
         $ele1.on("touchstart", function(e) {
             e.preventDefault()
             e.stopPropagation()
-            if(e.targetTouches.length === 2) {
-                let finger1X = e.targetTouches[0].clientX
-                let finger1Y = e.targetTouches[0].clientY
-                let finger2X = e.targetTouches[1].clientX
-                let finger2Y = e.targetTouches[1].clientY
-                let iVectorX = finger2X - finger1X
-                let iVectorY = finger2Y - finger1Y
-                let initialAngle = Math.atan2(iVectorX, iVectorY)
+            let finger1X, finger1Y, finger2X, finger2Y, iVectorX, iVectorY, vectorX, vectorY, initialAngle, currentAngle, dScale
+            if(e.touches.length === 2) {
+                finger1X = e.touches[0].clientX
+                finger1Y = e.touches[0].clientY
+                finger2X = e.touches[1].clientX
+                finger2Y = e.touches[1].clientY
+                iVectorX = finger2X - finger1X
+                iVectorY = finger2Y - finger1Y
+                initialAngle = Math.atan2(iVectorX, iVectorY)
                 let [posX, posY, scale, angle] = thisObject.exportData()
-                $(this).on("touchmove", function(e) {
-                    finger1X = e.targetTouches[0].clientX
-                    finger1Y = e.targetTouches[0].clientY
-                    finger2X = e.targetTouches[1].clientX
-                    finger2Y = e.targetTouches[1].clientY
+                $ele1.on("touchmove", function(e) {
+                    finger1X = e.touches[0].clientX
+                    finger1Y = e.touches[0].clientY
+                    finger2X = e.touches[1].clientX
+                    finger2Y = e.touches[1].clientY
                     vectorX = finger2X - finger1X
                     vectorY = finger2Y - finger1Y
-                    let currentAngle = Math.atan2(vectorX, vectorY)
+                    currentAngle = Math.atan2(vectorX, vectorY)
                     angle -= (currentAngle - initialAngle)*180/Math.PI
-                    let dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
+                    dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
                     scale *= dScale
-                    thisObject.performTransform($(this), posX, posY, scale, angle)
+                    thisObject.performTransform(posX, posY, scale, angle)
                     iVectorX = vectorX
                     iVectorY = vectorY
                     initialAngle = currentAngle
                 })
-                $(this).on("touchend", function() {
-                    $(this).off("touchmove", null)
-                    $(this).off("touchend", null)
+                $ele1.on("touchend", function() {
+                    $ele1.off("touchmove", null)
+                    $ele1.off("touchend", null)
                     thisObject.setValue(undefined, undefined, scale, angle)
                 })
             }
         })
         return this
     }
-
     this.collide = function(touchedCb, notTouchedCb, touchEndCb) {
         let ele2X = $ele2.offset().left + $ele2.width()/2
         let ele2Y = $ele2.offset().top + $ele2.height()/2
@@ -144,7 +143,7 @@ function TransformTouch(ele1, ele2) {
 
 function $$(ele1, ele2, ele3, ele4) {
     if(arguments.length === 2) {
-        return new TransformTouch(ele1, ele2)
+        return new Transform(ele1, ele2)
     }
 }
 
