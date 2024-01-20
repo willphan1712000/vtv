@@ -26,7 +26,9 @@
          </form>
       </div>
    </div>
-   <script src="/js/checkSubs.js?v=<?php echo $v;?>"></script>
-   <script src="/js/preventDefault.js?v=<?php echo $v;?>"></script>
+   <script>
+      var type = "logoutPage"
+   </script>
+   <script type="module" src="/js/main.js"></script>
 </body>
 </html>

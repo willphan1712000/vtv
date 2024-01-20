@@ -76,13 +76,11 @@ if (isset($_SESSION['username'])) {
 			</div>
 		</div>
 	</div>
-    <script src="/js/checkSubs.js?v=<?php echo $v;?>"></script>
-    <script src="/js/preventDefault.js?v=<?php echo $v;?>"></script>
-    <script src="/js/colorConcept.js?v=<?php echo $v;?>"></script>
 	<script>
 		if (window.innerWidth > 510) {
 			window.location = "/tv.php";
 		}
+		type = 'loginPage'
 	</script>
 </body>
 </html>
