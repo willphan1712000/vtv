@@ -18,7 +18,7 @@ include "../maintenance.php";
       </div>
       <div class="element">
          <div class="alert">
-            <h3>Your subscription has expired</h3> <h4>Contact us to have more time for Portfolio</h4>
+            <h3>Your subscription has been expired</h3> <h4>Contact us to have more time for Portfolio</h4>
          </div>
       </div>
    </div>
