@@ -2,7 +2,7 @@
 // Upload image name to database and image file to a certain folder
 // Include all necessary files
 include "../data/connection.php";
-include "../data/numoftheme.php";
+// include "../data/numoftheme.php";
 // Page Session
 SESSION_START();
 if(isset($_SESSION['username'])) {
@@ -48,14 +48,14 @@ while($row = mysqli_fetch_array($countQuery)) {
 <body>
 	<script>
 		var multiImgMax = <?= $multiImgMax;?>, currentImg = <?= $count;?>;
-		var numoftheme = <?=$numoftheme;?>;
 		var id = "<?= $title;?>";
 		var version = "<?= $v;?>";
 		var copyright  = "<?= $copyright;?>"
+		var maxVideoDuration = "<?= $maxVideoDuration;?>"
 		var type = "admin"
 	</script>
 	<script type="module" src="/js/main.js?v=<?=$v;?>" defer></script>
-    <script type="module" src="/js/upload.js?v=<?= $v;?>" defer></script>
-    <!-- <script src="/js/manualSlide.js?v=<?= $v;?>"></script> -->
+    <script type="module" src="/js/upload.js?v=<?=$v;?>" defer></script>
+    <!-- <script src="/js/manualSlide.js?v=<?=$v;?>"></script> -->
 </body>
 </html>

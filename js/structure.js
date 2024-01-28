@@ -4,8 +4,7 @@ function Body() {
         `/* =========== Preview Box Style ============== */
         #preview {
            width: 100%;
-           height: 100vh;
-           height: 100svh;
+           height: 100%;
            overflow: hidden;
            z-index: 99;
            position: absolute;
@@ -20,8 +19,8 @@ function Body() {
            backdrop-filter: blur(10px);
         }
         #preview .preview__imgArea {
-           width: 90vw;
-           height: 160vw;
+           width: 70vw;
+           aspect-ratio: 9/16;
            position: relative;
            overflow: hidden;
            border: dashed 3px #000;

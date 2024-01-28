@@ -1,6 +1,5 @@
 <?php
 include "data/connection.php";
-include "data/maintenance.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,9 +19,6 @@ include "data/maintenance.php";
     <script>
         var id = "<?=$title;?>";
     </script>
-    <script src="/js/linkedList.js"></script>
-    <script src="/js/checkSubs.js?v=<?php echo $v;?>"></script>
-    <script src="js/getTheme.js?v=<?php echo $v;?>"></script>
-    <script src="js/preventDefault.js?v=<?php echo $v;?>"></script>
+    <script type="module" src="js/getTheme.js?v=<?= $v;?>"></script>
 </body>
 </html>

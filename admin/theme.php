@@ -1,7 +1,5 @@
 <?php
 include "../data/connection.php";
-include "../data/maintenance.php";
-include "../data/numoftheme.php";
 // Page Session
 SESSION_START();
 if(isset($_SESSION['username'])) {
@@ -44,11 +42,10 @@ if(isset($_POST['back'])) {
         </form>
 	</div>
 	<script>
-		var numoftheme = <?=$numoftheme;?>;
 		var id = "<?= $title;?>";
-		type = 'theme'
+		var type = 'theme'
 	</script>
 	<script type="module" src="/js/main.js?v=<?=$v;?>" defer></script>
-    <script src="/js/theme.js?v=<?php echo $v;?>" defer></script>
+    <script type="module" src="/js/theme.js?v=<?=$v;?>" defer></script>
 </body>
 </html>

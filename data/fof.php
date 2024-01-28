@@ -26,10 +26,10 @@ class Feature {
 }
 $feature = new Feature();
 while(1) {
-    $timeArray = mysqli_fetch_assoc(mysqli_query($conn, "select *from time"));
-    $themeArray = mysqli_fetch_assoc(mysqli_query($conn, "select *from theme"));
-    $modeArray = mysqli_fetch_assoc(mysqli_query($conn, "select *from manualslidingmode"));
-    $imgArrayQuery = mysqli_query($conn, "select *from tvfile");
+    $timeArray = mysqli_fetch_assoc(mysqli_query($conn, "SELECT *FROM time"));
+    $themeArray = mysqli_fetch_assoc(mysqli_query($conn, "SELECT *FROM theme"));
+    $modeArray = mysqli_fetch_assoc(mysqli_query($conn, "SELECT *FROM manualslidingmode"));
+    $imgArrayQuery = mysqli_query($conn, "SELECT *FROM tvfile");
     $imgArray = array();
     while($row = mysqli_fetch_assoc($imgArrayQuery)) {
         $imgArray[] = $row;

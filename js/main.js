@@ -1,6 +1,6 @@
 import {body} from './structure.js'
-import { initialFetch, fetchImages, colorTable, detail, modifyTemplateProcess } from './preview.js'
-import { checkSubs, colorConcept, preventDefault } from './module.js'
+import { initialFetch, fetchImages, colorTable, detailCustom, modifyTemplateProcess } from './preview.js'
+import { checkSubs, colorConcept, preventDefault, owneraccount, time } from './module.js'
 
 switch(type) {
     case 'logoutPage':
@@ -17,7 +17,7 @@ switch(type) {
         initialFetch()
         fetchImages()
         colorTable()
-        detail()
+        detailCustom()
         modifyTemplateProcess()
         // End
         
@@ -34,6 +34,14 @@ switch(type) {
         checkSubs()
         colorConcept()
         preventDefault()
+        break
+    case 'aicloginPage':
+        preventDefault()
+        break
+    case 'aicadmin':
+        colorConcept()
+        time()
+        owneraccount()
         break
     default:
         console.log("This feature is intented for developers only. Any actions beyond this purpose will be considered hacking activities")
