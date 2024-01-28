@@ -80,7 +80,8 @@ if (isset($_SESSION['username'])) {
 		if (window.innerWidth > 510) {
 			window.location = "/tv.php";
 		}
-		type = 'loginPage'
+		var type = 'loginPage'
 	</script>
+	<script type="module" src="/js/main.js?v=<?=$v;?>"></script>
 </body>
 </html>

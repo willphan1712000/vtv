@@ -16,6 +16,7 @@
    overflow: hidden;
    width: 100vw;
    height: 100vh;
+   height: 100svh;
 }
 .login_parent > img{
    display: block;

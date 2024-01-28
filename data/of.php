@@ -18,10 +18,10 @@ class Feature {
     }
 }
 $feature = new Feature();
-$timeArray = mysqli_fetch_assoc(mysqli_query($conn, "select *from time"));
-$themeArray = mysqli_fetch_assoc(mysqli_query($conn, "select *from theme"));
-$imgArrayQuery = mysqli_query($conn, "select *from tvfile");
-$modeArray = mysqli_fetch_assoc(mysqli_query($conn, "select *from manualslidingmode"));
+$timeArray = mysqli_fetch_assoc(mysqli_query($conn, "SELECT *FROM time"));
+$themeArray = mysqli_fetch_assoc(mysqli_query($conn, "SELECT *FROM theme"));
+$imgArrayQuery = mysqli_query($conn, "SELECT *FROM tvfile ORDER BY rand()");
+$modeArray = mysqli_fetch_assoc(mysqli_query($conn, "SELECT *FROM manualslidingmode"));
 $imgArray = array();
 while($row = mysqli_fetch_assoc($imgArrayQuery)) {
     $imgArray[] = $row;

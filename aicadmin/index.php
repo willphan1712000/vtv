@@ -40,6 +40,7 @@ if (isset($_SESSION['aicusername'])) {
 	<link rel="stylesheet" type="text/css" href="../css/login.css?v=<?php echo $v;?>">
 	<link rel="stylesheet" type="text/css" href="../css/universal.css?v=<?php echo $v;?>">
 	<title>Log in</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 	<div class="login_parent">
@@ -70,6 +71,9 @@ if (isset($_SESSION['aicusername'])) {
 			</div>
 		</div>
 	</div>
-	<script src="/js/preventDefault.js?v=<?php echo $v;?>"></script>
+	<script>
+		var type = "aicloginPage"
+	</script>
+	<script type="module" src="/js/main.js?v=<?=$v;?>"></script>
 </body>
 </html>

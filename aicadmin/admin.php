@@ -97,9 +97,9 @@ while($row = mysqli_fetch_array($queryTime)) {
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
    	<meta http-equiv="Pragma" content="no-cache" />
    	<meta http-equiv="Expires" content="-1"/>
-	<link rel="stylesheet" type="text/css" href="../css/admin.css?v=<?php echo $v;?>">
-	<link rel="stylesheet" type="text/css" href="../css/universal.css?v=<?php echo $v;?>">
-	<link rel="stylesheet" type="text/css" href="../css/aicstyle.css?v=<?php echo $v;?>">
+	<link rel="stylesheet" type="text/css" href="../css/admin.css?v=<?=$v;?>">
+	<link rel="stylesheet" type="text/css" href="../css/universal.css?v=<?=$v;?>">
+	<link rel="stylesheet" type="text/css" href="../css/aicstyle.css?v=<?=$v;?>">
 	<title>Admin</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/960d33c629.js" crossorigin="anonymous"></script>
@@ -207,13 +207,12 @@ while($row = mysqli_fetch_array($queryTime)) {
 		</div>
 	</div>
 	<div id="copyright">
-		<p>© <?php echo $year?> All in Click, LLC. All rights reserved.</p>
+		<p>© <?=$year?> All in Click, LLC. All rights reserved.</p>
 	</div>
 	<script>
-		var id = "<?= $title;?>";
+		var id = "<?= $title;?>"
+		var type = "aicadmin"
 	</script>
-	<script src="/js/time.js?v=<?php echo $v;?>"></script>
-	<script src="/js/colorConcept.js?v=<?php echo $v;?>"></script>
-	<script src="/js/owneraccount.js?v=<?php echo $v;?>"></script>
+	<script type="module" src="/js/main.js?v=<?=$v;?>"></script>
 </body>
 </html>

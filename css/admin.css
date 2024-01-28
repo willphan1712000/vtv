@@ -184,6 +184,27 @@ h3 {
    transition: 0.4s;
    cursor: pointer;
 }
+.element .download_btn {
+   border: none;
+   border-radius: 50%;
+   position: absolute;
+   bottom: -6px;
+   right: -15px;
+   width: 36px;
+   height: 36px;
+   background-color: var(--main-color);
+   font-size: 15px;
+   color: #000;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   text-decoration: none;
+}
+.element .download_btn:hover {
+   background-color: rgb(255, 75, 75);
+   transition: 0.4s;
+   cursor: pointer;
+}
 .element img {
    width: 100%;
    height: 100%;
@@ -318,7 +339,7 @@ h3 {
    background-color: rgba(0, 0, 0, 0.6);
    width: 100vw;
    height: 100vh;
-   z-index: 1;
+   z-index: 2;
    justify-content: center;
    align-items: center;
    display: none;

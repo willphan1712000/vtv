@@ -23,107 +23,138 @@ const imgProcess = imageProcess()
 
 fileInputTv.onchange = (e) => {
     let file = e.target.files[0];
-    const name = file.name
-    const ext = name.split(".")[1]
-    if (ext.toLowerCase() === 'mp4' || ext.toLowerCase() === 'mov' || ext.toLowerCase() === 'avi') {
-        uploadingArea.classList.add("active");
-        uploadFileTv(file, 'mp4', 'video')
-    } else {
-        imgProcess.fileHandling(e, function(src) {
-            const dataArr = {
-                hasSignature: false
-            }
-            $("#preview").css("display", "flex")
-            $("body").css("overflow", "hidden")
-            previewImg.src = src
-            dataArr.previewImg = $$(".preview__imgArea--img", undefined).draggable().distort()
-            dataArr.previewSignature = $$("#preview .preview__signatureArea", ".preview__signatureArea--delete").draggable().distort().collide(function() {
-                // if touched
-                $(".preview__signatureArea--delete").addClass("glow")
-                $("#preview .preview__signatureArea").hide('fast')
-            }, function() {
-                // if not touched
-                $(".preview__signatureArea--delete").removeClass("glow")
-                $("#preview .preview__signatureArea").show('fast')
-            }, function() {
-                // If endtouch and toucheds
-                $(".preview__signatureArea--delete").removeClass("glow")
-            })
-            signatureInput.onchange = (e) => {
-                const file = e.target.files[0]
-                if(file) {
-                    dataArr.hasSignature = true
-                    imgProcess.fileHandling(e, function(src) {
-                        previewSignature.src = src
-                        $("#preview .preview__signatureArea").show()
-                    })
-                }
-            }
-            $("#preview .preview__btn--upload").click(function() {
-                // Get outer image dimensions
-                let [imgX, imgY, imgScale, imgAngle] = dataArr.previewImg.exportData()
-
-                // create canvas 4x3
-                var [canvas, ctx] = imgProcess.createCanvas(700, (16/9)*700)
-
-                // draw outer image on canvas 4x3
-                var [ctxReturned, srcEncoded] = imgProcess.drawImage(previewImg, ctx, imgX, imgY, imgScale, imgAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
-                // check if signature is added
-                if(dataArr.hasSignature && !dataArr.previewSignature.isCollided()) {
-                    // Get signature dimensions
-                    let [sX, sY, sScale, sAngle] = dataArr.previewSignature.exportData()
-                    var [,srcEncodedWithSignature] = imgProcess.drawImage(previewSignature, ctxReturned, sX, sY, sScale, sAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
-
-                    // Upload process starts here
-                    uploadFileTv(srcEncodedWithSignature, 'jpg', 'image')
-                    $("#preview").hide()
-                    uploadingArea.classList.add("active")
+    if(file) {
+        const name = file.name
+        const ext = name.split(".")[1]
+        if (ext.toLowerCase() === 'mp4' || ext.toLowerCase() === 'mov' || ext.toLowerCase() === 'avi') {
+            var URL = window.URL || window.webkitURL
+            var video = document.createElement("video")
+            var fileURL = URL.createObjectURL(file)
+            video.src = fileURL
+            video.addEventListener("loadeddata", function() {
+                let duration = video.duration
+                if(duration > maxVideoDuration) {
+                    alert("Your video should be less than " + maxVideoDuration + " seconds")
                 } else {
-                    uploadFileTv(srcEncoded, 'jpg', 'image')
-                    $("#preview").hide()
-                    uploadingArea.classList.add("active")
+                    uploadingArea.classList.add("active");
+                    uploadFileTv(file, 'mp4', 'video', duration)
                 }
             })
-        })
+        } else {
+            imgProcess.fileHandling(e, function(src) {
+                const dataArr = {
+                    hasSignature: false
+                }
+                $("#preview").css("display", "flex")
+                $("body").css("overflow", "hidden")
+                previewImg.src = src
+                dataArr.previewImg = $$(".preview__imgArea--img", undefined).draggable().distort()
+                dataArr.previewSignature = $$("#preview .preview__signatureArea", ".preview__signatureArea--delete").draggable().distort().collide(function() {
+                    // if touched
+                    $(".preview__signatureArea--delete").addClass("glow")
+                    $("#preview .preview__signatureArea").hide('fast')
+                }, function() {
+                    // if not touched
+                    $(".preview__signatureArea--delete").removeClass("glow")
+                    $("#preview .preview__signatureArea").show('fast')
+                }, function() {
+                    // If endtouch and toucheds
+                    $(".preview__signatureArea--delete").removeClass("glow")
+                })
+                signatureInput.onchange = (e) => {
+                    const file = e.target.files[0]
+                    if(file) {
+                        dataArr.hasSignature = true
+                        imgProcess.fileHandling(e, function(src) {
+                            previewSignature.src = src
+                            $("#preview .preview__signatureArea").show()
+                        })
+                    }
+                }
+                $("#preview .preview__btn--upload").click(function() {
+                    // Get outer image dimensions
+                    let [imgX, imgY, imgScale, imgAngle] = dataArr.previewImg.exportData()
+    
+                    // create canvas 4x3
+                    var [canvas, ctx] = imgProcess.createCanvas(700, (16/9)*700)
+    
+                    // draw outer image on canvas 4x3
+                    var [ctxReturned, srcEncoded] = imgProcess.drawImage(previewImg, ctx, imgX, imgY, imgScale, imgAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
+                    // check if signature is added
+                    if(dataArr.hasSignature && !dataArr.previewSignature.isCollided()) {
+                        // Get signature dimensions
+                        let [sX, sY, sScale, sAngle] = dataArr.previewSignature.exportData()
+                        var [,srcEncodedWithSignature] = imgProcess.drawImage(previewSignature, ctxReturned, sX, sY, sScale, sAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
+    
+                        // Upload process starts here
+                        uploadFileTv(srcEncodedWithSignature, 'jpg', 'image', undefined)
+                        $("#preview").hide()
+                        uploadingArea.classList.add("active")
+                    } else {
+                        uploadFileTv(srcEncoded, 'jpg', 'image', undefined)
+                        $("#preview").hide()
+                        uploadingArea.classList.add("active")
+                    }
+                })
+            })
+        }
     }
 }
-function uploadFileTv(src, ext, type) {
-    if(type === 'image') {
-        let d = new Date()
-        let fileName = d.getTime() + "." + ext
-        let data = {
-            body: src,
-            name: fileName
-        }
-        let post = JSON.stringify(data);
-        let xhr = new XMLHttpRequest();
-        xhr.onload = function() {
-            location.reload();
-        }
-        xhr.open("POST", "/data/imgupload.php");
-        xhr.upload.addEventListener("progress", ({loaded, total}) => {
-            let fileLoaded = Math.floor((loaded/total)*100);
-            bar.value = fileLoaded; 
-            if (loaded == total) {
-                bar.style.display = "none";
-                progressLabel.innerHTML = `<p>Loading...</p></br>`;
-            } else {
-                progressLabel.innerHTML = `<p>Please wait</p></br>
-                                    <p>${fileLoaded} %</p></br>`;
-            }
-        })
-        xhr.setRequestHeader("Content-type",  "application/json");
-        xhr.send(post);
-    } else {
-        const formData = new FormData();
-        formData.append("tvinpFile", src)
-        fetch("/data/videoupload.php", {
-            method: "post",
-            body: formData
-        }).then(res => {
-            location.reload()
-        }).catch(err => console.log(err))
+function uploadFileTv(src, ext, type, duration) {
+    let d = new Date()
+    let uploadDataConfig = {
+        filename: d.getTime() + "." + ext,
+        body: src,
+        duration: duration,
+        ImgContentType: 'application/json',
+        VideoContentType: false,
+        ImgUrl: '/data/imgupload.php',
+        VideoUrl: '/data/videoupload.php'
     }
+    let data, contentType, url
+    if(type === 'image') {
+        url = uploadDataConfig.ImgUrl
+        data = JSON.stringify({
+            body: uploadDataConfig.body,
+            name: uploadDataConfig.filename
+        })
+        contentType = uploadDataConfig.ImgContentType
+    } else {
+        url = uploadDataConfig.VideoUrl
+        const formData = new FormData();
+        formData.append("tvinpFile", uploadDataConfig.body)
+        formData.append("duration", Math.floor(uploadDataConfig.duration)+1)
+        formData.append("filename", uploadDataConfig.filename)
+        data = formData
+        contentType = uploadDataConfig.VideoContentType
+    }
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: data,
+        contentType: contentType,
+        processData: false,
+        xhr: function() {
+            var xhr = $.ajaxSettings.xhr()
+            xhr.upload.onprogress = function(e) {
+                if(e.lengthComputable) {
+                    let fileLoaded = Math.floor((e.loaded/e.total)*100);
+                    bar.value = fileLoaded; 
+                    if (e.loaded == e.total) {
+                        bar.style.display = "none";
+                        progressLabel.innerHTML = `<p>Loading...<p></br>`;
+                    } else {
+                        progressLabel.innerHTML = `<p>Please wait</p></br><p>${fileLoaded} %</p></br>`;
+                    }
+                }
+
+            }
+            return xhr
+        },
+        success: function() {
+            location.reload()
+        }
+    })
 }
 
 function reachMultiImgMax() {

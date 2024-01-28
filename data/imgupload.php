@@ -5,5 +5,6 @@
     $tvimage = $body->name;
     $location = "../admin/upload/$tvimage";
     file_put_contents($location, base64_decode($body->body));
+
     mysqli_query($conn, "INSERT INTO tvfile VALUES('$tvimage', '0')");
 ?>
