@@ -30,7 +30,7 @@ fileInputTv.onchange = (e) => {
             var URL = window.URL || window.webkitURL
             var video = document.createElement("video")
             var fileURL = URL.createObjectURL(file)
-            video.src = fileURL
+            video.autoplay = true
             video.addEventListener("loadeddata", function() {
                 let duration = video.duration
                 if(duration > maxVideoDuration) {
@@ -40,6 +40,7 @@ fileInputTv.onchange = (e) => {
                     uploadFileTv(file, 'mp4', 'video', duration)
                 }
             })
+            video.src = fileURL
         } else {
             imgProcess.fileHandling(e, function(src) {
                 const dataArr = {

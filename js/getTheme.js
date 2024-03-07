@@ -4,20 +4,22 @@ import { theme, detail } from './preview.js'
 let playList = createCircularLinkedList()
 let queue = createQueue()
 let themeObj = theme(), detailObj = detail()
+$(".warning .refresh").click(() => {location.reload()})
 $.ajax({
    url: "/data/of.php",
    method: "GET",
    dataType: "json",
    success: function(e) {
       let iData = e;
+      if(e.theme !== null && e.time !== null)
       fetchTheme(iData).then(res => {
       }).then(()=>{
          $(".loading").css("opacity", "0")
-         if(iData.mode === 'false') {
-            queue.add(false)
-            playList.setCurrentNode(playList.headNode())
-            playList.autoplay(queue.getCurrentIndex(), playList.getCurrentNode()) // index is 1
-         }
+         // if(iData.mode === 'false') {
+         // }
+         queue.add(false)
+         playList.setCurrentNode(playList.headNode())
+         playList.autoplay(queue.getCurrentIndex(), playList.getCurrentNode()) // index is 1
       }).catch(err => {
          $(".loading p").html("There are no images/videos uploaded")
       })
