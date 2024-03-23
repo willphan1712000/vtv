@@ -6,10 +6,10 @@
 
     // Database Information
     $servername = "localhost:3306";
-    // $username = "allincli_ssadmin";
-    // $password= "123456";
-    $username = "root";
-    $password= "";
+    $username = "allincli_ssadmin";
+    $password= "123456";
+    // $username = "root";
+    // $password= "";
     $dbName = "allincli_vtv_".str_replace('.','_',basename(dirname(__DIR__)));
 
     $multiImgMax = 30;
