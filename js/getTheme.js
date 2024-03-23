@@ -11,18 +11,21 @@ $.ajax({
    dataType: "json",
    success: function(e) {
       let iData = e;
-      if(e.theme !== null && e.time !== null)
-      fetchTheme(iData).then(res => {
-      }).then(()=>{
-         $(".loading").css("opacity", "0")
-         // if(iData.mode === 'false') {
-         // }
-         queue.add(false)
-         playList.setCurrentNode(playList.headNode())
-         playList.autoplay(queue.getCurrentIndex(), playList.getCurrentNode()) // index is 1
-      }).catch(err => {
-         $(".loading p").html("There are no images/videos uploaded")
-      })
+      if(e.theme !== null && e.time !== null) {
+         fetchTheme(iData).then(res => {
+         }).then(()=>{
+            $(".loading").css("opacity", "0")
+            // if(iData.mode === 'false') {
+            // }
+            queue.add(false)
+            playList.setCurrentNode(playList.headNode())
+            playList.autoplay(queue.getCurrentIndex(), playList.getCurrentNode()) // index is 1
+         }).catch(err => {
+            $(".loading p").html("There are no images/videos uploaded")
+         })
+      } else {
+         $(".warning").css("display", "flex")
+      }
       
       const evtSource = new EventSource('/data/fof.php');
       evtSource.onopen = function() {
@@ -153,60 +156,59 @@ function fetchTheme(array) {
             }
          }
          loopOverList().then(() => {
-            console.log("DOM loaded successfully")
+            // Fetch detail handling
+            if(array.detail != "none") {
+               detailObj.addDOM("#detail", array.detail, null)
+               detailObj.addCSS(array.detail)
+            } else {
+               $("#detail").empty();
+            }
+            // Left and Right Logo
+            if(array.theme === '1' || array.theme === '2' || array.theme === '3') {
+               $(document).ready(function(){
+                  const left = document.querySelector(".textSlider__left");
+                  left.appendChild(document.createElement("canvas"));
+                  const canvas = document.querySelector(".textSlider__left canvas");
+                  const ctx = canvas.getContext("2d");
+                  $.get("/data/getlogoleft.php", e =>{
+                        const img = new Image();
+                        img.src = "/img/" + e;
+                        img.addEventListener("load",()=>{
+                           const ratio = img.width / img.height;
+                           var height = 200;
+                           var width = height*ratio;
+                           canvas.width = height;
+                           canvas.height = width;
+                           ctx.rotate(90*Math.PI/180);
+                           ctx.drawImage(img, 0, -height, width, height);
+                        })
+                  })
+               })
+               $(document).ready(function(){
+                  const right = document.querySelector(".textSlider__right");
+                  right.appendChild(document.createElement("canvas"));
+                  const canvas = document.querySelector(".textSlider__right canvas");
+                  const ctx = canvas.getContext("2d");
+                  $.get("/data/getlogoright.php", e =>{
+                        const img = new Image();
+                        img.src = "/img/" + e;
+                        img.addEventListener("load",()=>{
+                           const ratio = img.width / img.height;
+                           var height = 200;
+                           var width = height*ratio;
+                           canvas.width = height;
+                           canvas.height = width;
+                           ctx.rotate(90*Math.PI/180);
+                           ctx.drawImage(img, 0, -height, width, height);
+                        })
+                  })
+               })
+            }
+            $(".textSlider__left").css("background-color", array.bgcolor);
+            $(".textSlider__right").css("background-color", array.bgcolor);
+            $(".parallax use").css("fill", array.bgcolor);
+            res()
          })
-         // Fetch detail handling
-         if(array.detail != "none") {
-            detailObj.addDOM("#detail", array.detail, null)
-            detailObj.addCSS(array.detail)
-         } else {
-            $("#detail").empty();
-         }
-         // Left and Right Logo
-         if(array.theme === '1' || array.theme === '2' || array.theme === '3') {
-            $(document).ready(function(){
-               const left = document.querySelector(".textSlider__left");
-               left.appendChild(document.createElement("canvas"));
-               const canvas = document.querySelector(".textSlider__left canvas");
-               const ctx = canvas.getContext("2d");
-               $.get("/data/getlogoleft.php", e =>{
-                     const img = new Image();
-                     img.src = "/img/" + e;
-                     img.addEventListener("load",()=>{
-                        const ratio = img.width / img.height;
-                        var height = 200;
-                        var width = height*ratio;
-                        canvas.width = height;
-                        canvas.height = width;
-                        ctx.rotate(90*Math.PI/180);
-                        ctx.drawImage(img, 0, -height, width, height);
-                     })
-               })
-            })
-            $(document).ready(function(){
-               const right = document.querySelector(".textSlider__right");
-               right.appendChild(document.createElement("canvas"));
-               const canvas = document.querySelector(".textSlider__right canvas");
-               const ctx = canvas.getContext("2d");
-               $.get("/data/getlogoright.php", e =>{
-                     const img = new Image();
-                     img.src = "/img/" + e;
-                     img.addEventListener("load",()=>{
-                        const ratio = img.width / img.height;
-                        var height = 200;
-                        var width = height*ratio;
-                        canvas.width = height;
-                        canvas.height = width;
-                        ctx.rotate(90*Math.PI/180);
-                        ctx.drawImage(img, 0, -height, width, height);
-                     })
-               })
-            })
-         }
-         $(".textSlider__left").css("background-color", array.bgcolor);
-         $(".textSlider__right").css("background-color", array.bgcolor);
-         $(".parallax use").css("fill", array.bgcolor);
-         res()
       }
    })
 }
