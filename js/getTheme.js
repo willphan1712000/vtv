@@ -4,7 +4,9 @@ import { theme, detail } from './preview.js'
 let playList = createCircularLinkedList()
 let queue = createQueue()
 let themeObj = theme(), detailObj = detail()
-$(".warning .refresh").click(() => {location.reload()})
+document.querySelector(".warning .refresh").addEventListener("click", () => {
+   location.reload()
+})
 $.ajax({
    url: "/data/of.php",
    method: "GET",
@@ -14,17 +16,17 @@ $.ajax({
       if(e.theme !== null && e.time !== null) {
          fetchTheme(iData).then(res => {
          }).then(()=>{
-            $(".loading").css("opacity", "0")
+            document.querySelector(".loading").style.opacity = '0'
             // if(iData.mode === 'false') {
             // }
             queue.add(false)
             playList.setCurrentNode(playList.headNode())
             playList.autoplay(queue.getCurrentIndex(), playList.getCurrentNode()) // index is 1
          }).catch(err => {
-            $(".loading p").html("There are no images/videos uploaded")
+            document.querySelector(".loading p").innerHTML = "There are no images/videos uploaded"
          })
       } else {
-         $(".warning").css("display", "flex")
+         document.querySelector(".warning").style.display = 'flex'
       }
       
       const evtSource = new EventSource('/data/fof.php');
@@ -161,7 +163,7 @@ function fetchTheme(array) {
                detailObj.addDOM("#detail", array.detail, null)
                detailObj.addCSS(array.detail)
             } else {
-               $("#detail").empty();
+               document.querySelector("#detail").innerHTML = ''
             }
             // Left and Right Logo
             if(array.theme === '1' || array.theme === '2' || array.theme === '3') {
@@ -204,9 +206,9 @@ function fetchTheme(array) {
                   })
                })
             }
-            $(".textSlider__left").css("background-color", array.bgcolor);
-            $(".textSlider__right").css("background-color", array.bgcolor);
             $(".parallax use").css("fill", array.bgcolor);
+            document.querySelector(".textSlider__left").style.backgroundColor = array.bgcolor
+            document.querySelector(".textSlider__right").style.backgroundColor = array.bgcolor
             res()
          })
       }
@@ -217,14 +219,20 @@ function fetchTheme(array) {
 function addSlideToSlider(node) {
    return new Promise((res, rej) => {
       const filename = node.data.filename.split(".")[0]
+      const slider = document.querySelector(".slider")
       if(node.data.type === 'video') {
-         $(".slider").append('<div class="slide --'+filename+'"><video muted playsinline src="/admin/upload/'+node.data.filename+'"></video></div>')
-         $(".slider .--"+filename+" video").on("loadeddata", () => {
+         // $(".slider").append('<div class="slide --'+filename+'"><video muted playsinline src="/admin/upload/'+node.data.filename+'"></video></div>')
+         // $(".slider .--"+filename+" video").on("loadeddata", () => {
+         //    res()
+         // })
+         slider.insertAdjacentHTML('beforeend', '<div class="slide --'+filename+'"><video muted playsinline src="/admin/upload/'+node.data.filename+'"></video></div>')
+         document.querySelector(".slider .--"+filename+" video").addEventListener("loadeddata", () => {
             res()
          })
       } 
       else {
-         $(".slider").append('<div class="slide --'+filename+'"><canvas></canvas></div>')
+         // $(".slider").append('<div class="slide --'+filename+'"><canvas></canvas></div>')
+         slider.insertAdjacentHTML('beforeend', '<div class="slide --'+filename+'"><canvas></canvas></div>')
          const canvas = document.querySelector('.slider .--'+filename+' canvas')
          const ctx = canvas.getContext("2d");
          var image = new Image();
@@ -253,18 +261,20 @@ playList.autoplay = function(index, currentNode) {
    // Set current Node
    let current = currentNode
    playList.setCurrentNode(current)
-   let $current = $(".slider .--" + current.data.filename.split(".")[0])
-   $current.addClass("current")
+   // let $current = $(".slider .--" + current.data.filename.split(".")[0])
+   let $current = document.querySelector(".slider .--" + current.data.filename.split(".")[0])
+   $current.classList.add("current")
    let video
    if(current.data.type === 'video') {
-      video = $current.find("video").get(0)
+      // video = $current.find("video").get(0)
+      video = $current.querySelector("video")
       video.play()
    } 
    function imgWork() {
       return new Promise((res, rej) => {
          setTimeout(()=>{
             current = playList.getStop() ? current : current.next
-            $current.removeClass("current")
+            $current.classList.remove("current")
             res(current)
          }, (current.data.duration)*1000)
       })
@@ -288,9 +298,9 @@ $(window).on("offline", ()=>{
 })
 
 // Reload everything when returning to the screen
-// document.addEventListener("visibilitychange", function() {
-//    location.reload()
-// })
+document.addEventListener("visibilitychange", function() {
+   location.reload()
+})
 
 // Check subscription
 checkSubs()
