@@ -158,6 +158,7 @@ function fetchTheme(array) {
             }
          }
          loopOverList().then(() => {
+            document.querySelector(".slider").insertAdjacentHTML('beforeend', '<div class="slide --video"><video muted playsinline autoplay><source></video></div>')
             // Fetch detail handling
             if(array.detail != "none") {
                detailObj.addDOM("#detail", array.detail, null)
@@ -220,18 +221,7 @@ function addSlideToSlider(node) {
    return new Promise((res, rej) => {
       const filename = node.data.filename.split(".")[0]
       const slider = document.querySelector(".slider")
-      if(node.data.type === 'video') {
-         // $(".slider").append('<div class="slide --'+filename+'"><video muted playsinline src="/admin/upload/'+node.data.filename+'"></video></div>')
-         // $(".slider .--"+filename+" video").on("loadeddata", () => {
-         //    res()
-         // })
-         slider.insertAdjacentHTML('beforeend', '<div class="slide --'+filename+'"><video muted playsinline src="/admin/upload/'+node.data.filename+'"></video></div>')
-         document.querySelector(".slider .--"+filename+" video").addEventListener("loadeddata", () => {
-            res()
-         })
-      } 
-      else {
-         // $(".slider").append('<div class="slide --'+filename+'"><canvas></canvas></div>')
+      if(node.data.type === 'image') {
          slider.insertAdjacentHTML('beforeend', '<div class="slide --'+filename+'"><canvas></canvas></div>')
          const canvas = document.querySelector('.slider .--'+filename+' canvas')
          const ctx = canvas.getContext("2d");
@@ -244,9 +234,15 @@ function addSlideToSlider(node) {
             canvas.height = width;
             ctx.rotate(90*Math.PI/180);
             ctx.drawImage(image, 0, -height, width, height);
-            res()
-         })             
-      }
+         }) 
+      } 
+      res()
+      // else {     
+      //    slider.insertAdjacentHTML('beforeend', '<div class="slide --'+filename+'"><video muted playsinline src="/admin/upload/'+node.data.filename+'"></video></div>')
+      //    document.querySelector(".slider .--"+filename+" video").addEventListener("loadeddata", () => {
+      //       res()
+      //    })     
+      // }
    })
 }
 
@@ -261,15 +257,17 @@ playList.autoplay = function(index, currentNode) {
    // Set current Node
    let current = currentNode
    playList.setCurrentNode(current)
-   // let $current = $(".slider .--" + current.data.filename.split(".")[0])
-   let $current = document.querySelector(".slider .--" + current.data.filename.split(".")[0])
-   $current.classList.add("current")
-   let video
+   let $current
    if(current.data.type === 'video') {
-      // video = $current.find("video").get(0)
-      video = $current.querySelector("video")
-      video.play()
-   } 
+      $current = document.querySelector(".slider .--video")
+      let videoSrc = document.querySelector(".slider .--video video source")
+      let video = document.querySelector(".slider .--video video")
+      videoSrc.src = "/admin/upload/" + current.data.filename
+      video.load()
+   } else {
+      $current = document.querySelector(".slider .--" + current.data.filename.split(".")[0])
+   }
+   $current.classList.add("current")
    function imgWork() {
       return new Promise((res, rej) => {
          setTimeout(()=>{
