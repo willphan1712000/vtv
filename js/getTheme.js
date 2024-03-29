@@ -1,5 +1,6 @@
 import { createCircularLinkedList, checkSubs, preventDefault, createQueue } from "./module.js";
 import { theme, detail } from './preview.js'
+import '/css/universal.css'
 // Initial load for the entire TV
 let playList = createCircularLinkedList()
 let queue = createQueue()
@@ -101,14 +102,20 @@ $.ajax({
             })
             let newFile = $(iDataArr).not(DataArr).get()
             playList.removeName(newFile[0])
-            let removedDOMEle = $(".slider .--" + newFile[0].split(".")[0])
-            removedDOMEle.remove()
+            let ext = newFile[0].split(".")[1], removedDOMEle
+            if(ext !== 'mp4' && ext !== 'avi' && ext !== 'mov') {
+               removedDOMEle = $(".slider .--" + newFile[0].split(".")[0])
+               removedDOMEle.remove()
+            } else {
+               removedDOMEle = null
+            }
             iData.img = Data.img
             if(playList.length() === 0) {
                queue.modify(queue.getCurrentIndex(), true)
                $(".loading").css("opacity", "1")
                $(".loading p").html("There are no images/videos uploaded")
             } else {
+               if(removedDOMEle !== null)
                // Handle if the removed DOM element has current class
                if(removedDOMEle.hasClass("current")) {
                   queue.modify(queue.getCurrentIndex(), true)
@@ -158,7 +165,6 @@ function fetchTheme(array) {
             }
          }
          loopOverList().then(() => {
-            document.querySelector(".slider").insertAdjacentHTML('beforeend', '<div class="slide --video"><video muted playsinline autoplay><source></video></div>')
             // Fetch detail handling
             if(array.detail != "none") {
                detailObj.addDOM("#detail", array.detail, null)
@@ -234,15 +240,19 @@ function addSlideToSlider(node) {
             canvas.height = width;
             ctx.rotate(90*Math.PI/180);
             ctx.drawImage(image, 0, -height, width, height);
+            res()
          }) 
       } 
-      res()
-      // else {     
-      //    slider.insertAdjacentHTML('beforeend', '<div class="slide --'+filename+'"><video muted playsinline src="/admin/upload/'+node.data.filename+'"></video></div>')
-      //    document.querySelector(".slider .--"+filename+" video").addEventListener("loadeddata", () => {
-      //       res()
-      //    })     
-      // }
+      else {
+         if(!slider.contains(document.querySelector("video"))) {
+            slider.insertAdjacentHTML('beforeend', '<div class="slide --video"><video muted playsinline autoplay><source></video></div>')
+         }
+         res()
+         // slider.insertAdjacentHTML('beforeend', '<div class="slide --'+filename+'"><video muted playsinline src="/admin/upload/'+node.data.filename+'"></video></div>')
+         // document.querySelector(".slider .--"+filename+" video").addEventListener("loadeddata", () => {
+         //    res()
+         // })     
+      }
    })
 }
 
