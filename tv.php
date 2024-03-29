@@ -8,7 +8,7 @@ include "data/connection.php";
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title?></title>
-    <link rel="stylesheet" type="text/css" href="/css/universal.css?v=<?php echo $v;?>">
+    <!-- <link rel="stylesheet" type="text/css" href="/css/universal.css?v=<?php echo $v;?>"> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body style="overflow: hidden;">
@@ -20,6 +20,6 @@ include "data/connection.php";
     <script>
         var id = "<?=$title;?>";
     </script>
-    <script type="module" src="js/getTheme.js?v=<?= $v;?>"></script>
+    <script type="module" src="dist/bundle.js?v=<?= $v;?>"></script>
 </body>
 </html>
