@@ -1,6 +1,5 @@
 .DS_Store
 /admin/upload/
-/data/connection.php
 node_modules
 package-lock.json
 package.json
