@@ -232,7 +232,7 @@ function Body() {
                         <h3>Upload TV Image (9x16)</h3>
                         <p>${multiImgMax} Maximum</p>
                         <form action="" method="POST" enctype="multipart/form-data">
-                            <input id="tvinpFile" type="file" accept="video/*, image/*" name="fileTv" hidden>
+                            <input id="tvinpFile" type="file" accept="image/*" name="fileTv" hidden>
                             <p>Upload</p>
                         </form>
                     </div>
