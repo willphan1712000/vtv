@@ -24,7 +24,7 @@ $.ajax({
             playList.setCurrentNode(playList.headNode())
             playList.autoplay(queue.getCurrentIndex(), playList.getCurrentNode()) // index is 1
          }).catch(err => {
-            document.querySelector(".loading p").innerHTML = "There are no images/videos uploaded"
+            document.querySelector(".loading p").innerHTML = "There are no files uploaded"
          })
       } else {
          document.querySelector(".warning").style.display = 'flex'
