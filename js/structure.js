@@ -19,8 +19,8 @@ function Body() {
            backdrop-filter: blur(10px);
         }
         #preview .preview__imgArea {
-           width: 80vw;
-           height: 142vw;
+           width: 70vw;
+           height: 124vw;
            position: relative;
            border: dashed 3px #000;
            background-color: #fff;
