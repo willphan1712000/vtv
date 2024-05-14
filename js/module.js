@@ -1,6 +1,7 @@
-function Transform(ele1, ele2) {
-    this.ele1 = ele1
-    this.ele2 = ele2
+function Transform(ele1, ele2, ele3) {
+    this.ele1 = ele1 // Main element
+    this.ele2 = ele2 // Collision element
+    this.ele3 = ele3 // Controller element
     this.collided = false
     this.x = 0
     this.y = 0
@@ -8,6 +9,9 @@ function Transform(ele1, ele2) {
     this.angle = 0
     const $ele1 = $(this.ele1)
     const $ele2 = $(this.ele2)
+    const $ele3 = $(this.ele3)
+    const $resize = $ele3.find(".resize")
+    const $rotate = $ele3.find(".rotate")
     const thisObject = this
     
     this.setValue = function(x, y, scale, angle) {
@@ -18,6 +22,9 @@ function Transform(ele1, ele2) {
     }
     this.performTransform = function(x, y, scale, angle) {
         $ele1.css({
+            transform: `translate(${x}px, ${y}px) scale(${scale}) rotate(${angle}deg)`
+        })
+        $ele3.css({
             transform: `translate(${x}px, ${y}px) scale(${scale}) rotate(${angle}deg)`
         })
     }
@@ -34,15 +41,15 @@ function Transform(ele1, ele2) {
         this.collided = is
     }
 
-    this.draggable = function() {
+    this.draggableTouch = function() {
         let iPosX, iPosY, posX, posY, dX, dY
-        $ele1.on("touchstart", function(e) {
+        $ele3.on("touchstart", function(e) {
             e.preventDefault()
             e.stopPropagation()
             iPosX = e.touches[0].clientX
             iPosY = e.touches[0].clientY
             let [posX, posY, scale, angle] = thisObject.exportData()
-            $ele1.on("touchmove", function(e) {
+            $ele3.on("touchmove", function(e) {
                 dX = e.touches[0].clientX - iPosX
                 dY = e.touches[0].clientY - iPosY
                 iPosX = e.touches[0].clientX
@@ -51,59 +58,178 @@ function Transform(ele1, ele2) {
                 posY += dY
                 thisObject.performTransform(posX, posY, scale, angle)
             })
-            $ele1.on("touchend", function() {
-                $ele1.off("touchmove", null)
-                $ele1.off("touchend", null)
+            $ele3.on("touchend", function() {
+                $ele3.off("touchmove", null)
+                $ele3.off("touchend", null)
                 thisObject.setValue(posX, posY, undefined, undefined)
             })
         })
         return this
     }
 
-    this.distort = function() {
-        $ele1.on("touchstart", function(e) {
+    this.draggableDesk = function() {
+        $ele3.on("mousedown", function(e) {
+            let iPosX, iPosY, dX, dY
             e.preventDefault()
             e.stopPropagation()
-            let finger1X, finger1Y, finger2X, finger2Y, iVectorX, iVectorY, vectorX, vectorY, initialAngle, currentAngle, dScale
-            if(e.touches.length === 2) {
-                finger1X = e.touches[0].clientX
-                finger1Y = e.touches[0].clientY
-                finger2X = e.touches[1].clientX
-                finger2Y = e.touches[1].clientY
-                iVectorX = finger2X - finger1X
-                iVectorY = finger2Y - finger1Y
-                initialAngle = Math.atan2(iVectorX, iVectorY)
-                let [posX, posY, scale, angle] = thisObject.exportData()
-                $ele1.on("touchmove", function(e) {
-                    finger1X = e.touches[0].clientX
-                    finger1Y = e.touches[0].clientY
-                    finger2X = e.touches[1].clientX
-                    finger2Y = e.touches[1].clientY
-                    vectorX = finger2X - finger1X
-                    vectorY = finger2Y - finger1Y
-                    currentAngle = Math.atan2(vectorX, vectorY)
-                    angle -= (currentAngle - initialAngle)*180/Math.PI
-                    dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
-                    scale *= dScale
-                    thisObject.performTransform(posX, posY, scale, angle)
-                    iVectorX = vectorX
-                    iVectorY = vectorY
-                    initialAngle = currentAngle
-                })
-                $ele1.on("touchend", function() {
-                    $ele1.off("touchmove", null)
-                    $ele1.off("touchend", null)
-                    thisObject.setValue(undefined, undefined, scale, angle)
-                })
-            }
+            iPosX = e.clientX
+            iPosY = e.clientY
+            let [posX, posY, scale, angle] = thisObject.exportData()
+            $(window).on("mousemove", function(e) {
+                dX = e.clientX - iPosX
+                dY = e.clientY - iPosY
+                iPosX = e.clientX
+                iPosY = e.clientY
+                posX += dX
+                posY += dY
+                thisObject.performTransform(posX, posY, scale, angle)
+            })
+            $(window).on("mouseup", function() {
+                $(window).off("mousemove", null)
+                $(window).off("mouseup", null)
+                thisObject.setValue(posX, posY, undefined, undefined)
+            })
         })
         return this
     }
+
+    this.zoomTouch = function() {
+        $resize.on("touchstart", function(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            let iVectorX, iVectorY, vectorX, vectorY, initialAngle, currentAngle, dScale, X, Y
+            X = $ele1.offset().left + $ele1.width()/2
+            Y = $ele1.offset().top + $ele1.height()/2
+            iVectorX = e.touches[0].clientX - X
+            iVectorY = e.touches[0].clientY - Y
+            let [posX, posY, scale, angle] = thisObject.exportData()
+            // initialAngle = Math.atan2(iVectorX, iVectorY)
+            $(window).on("touchmove", function(e) {
+                vectorX = e.touches[0].clientX - X
+                vectorY = e.touches[0].clientY - Y
+                // currentAngle = Math.atan2(vectorX, vectorY)
+                // angle -= (currentAngle - initialAngle)*180/Math.PI
+                dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
+                scale *= dScale
+                thisObject.performTransform(posX, posY, scale, angle)
+                iVectorX = vectorX
+                iVectorY = vectorY
+                // initialAngle = currentAngle
+            })
+
+            $(window).on("touchend", function() {
+                $(window).off("touchmove", null)
+                $(window).off("touchend", null)
+                thisObject.setValue(undefined, undefined, scale, angle)
+            })
+        })
+        return this
+    }
+
+    this.rotateTouch = function() {
+        $rotate.on("touchstart", function(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            let iVectorX, iVectorY, vectorX, vectorY, initialAngle, currentAngle, dScale, X, Y
+            X = $ele1.offset().left + $ele1.width()/2
+            Y = $ele1.offset().top + $ele1.height()/2
+            iVectorX = e.touches[0].clientX - X
+            iVectorY = e.touches[0].clientY - Y
+            let [posX, posY, scale, angle] = thisObject.exportData()
+            initialAngle = Math.atan2(iVectorX, iVectorY)
+            $(window).on("touchmove", function(e) {
+                vectorX = e.touches[0].clientX - X
+                vectorY = e.touches[0].clientY - Y
+                currentAngle = Math.atan2(vectorX, vectorY)
+                angle -= (currentAngle - initialAngle)*180/Math.PI
+                // dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
+                // scale *= dScale
+                thisObject.performTransform(posX, posY, scale, angle)
+                iVectorX = vectorX
+                iVectorY = vectorY
+                initialAngle = currentAngle
+            })
+
+            $(window).on("touchend", function() {
+                $(window).off("touchmove", null)
+                $(window).off("touchend", null)
+                thisObject.setValue(undefined, undefined, scale, angle)
+            })
+        })
+        return this
+    }
+
+    this.zoomDesk = function() {
+        $resize.on("mousedown", function(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            let iVectorX, iVectorY, vectorX, vectorY, initialAngle, currentAngle, dScale, X, Y
+            X = $ele1.offset().left + $ele1.width()/2
+            Y = $ele1.offset().top + $ele1.height()/2
+            iVectorX = e.clientX - X
+            iVectorY = e.clientY - Y
+            let [posX, posY, scale, angle] = thisObject.exportData()
+            // initialAngle = Math.atan2(iVectorX, iVectorY)
+            $(window).on("mousemove", function(e) {
+                vectorX = e.clientX - X
+                vectorY = e.clientY - Y
+                // currentAngle = Math.atan2(vectorX, vectorY)
+                // angle -= (currentAngle - initialAngle)*180/Math.PI
+                dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
+                scale *= dScale
+                thisObject.performTransform(posX, posY, scale, angle)
+                iVectorX = vectorX
+                iVectorY = vectorY
+                // initialAngle = currentAngle
+            })
+
+            $(window).on("mouseup", function() {
+                $(window).off("mousemove", null)
+                $(window).off("mouseup", null)
+                thisObject.setValue(undefined, undefined, scale, angle)
+            })
+        })
+        return this
+    }
+
+    this.rotateDesk = function() {
+        $rotate.on("mousedown", function(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            let iVectorX, iVectorY, vectorX, vectorY, initialAngle, currentAngle, dScale, X, Y
+            X = $ele1.offset().left + $ele1.width()/2
+            Y = $ele1.offset().top + $ele1.height()/2
+            iVectorX = e.clientX - X
+            iVectorY = e.clientY - Y
+            let [posX, posY, scale, angle] = thisObject.exportData()
+            initialAngle = Math.atan2(iVectorX, iVectorY)
+            $(window).on("mousemove", function(e) {
+                vectorX = e.clientX - X
+                vectorY = e.clientY - Y
+                currentAngle = Math.atan2(vectorX, vectorY)
+                angle -= (currentAngle - initialAngle)*180/Math.PI
+                // dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
+                // scale *= dScale
+                thisObject.performTransform(posX, posY, scale, angle)
+                iVectorX = vectorX
+                iVectorY = vectorY
+                initialAngle = currentAngle
+            })
+
+            $(window).on("mouseup", function() {
+                $(window).off("mousemove", null)
+                $(window).off("mouseup", null)
+                thisObject.setValue(undefined, undefined, scale, angle)
+            })
+        })
+        return this
+    }
+
     this.collide = function(touchedCb, notTouchedCb, touchEndCb) {
         let ele2X = $ele2.offset().left + $ele2.width()/2
         let ele2Y = $ele2.offset().top - $(window).scrollTop() + $ele2.height()/2
         let radius = $ele2.width()/2
-        $ele1.on("touchstart", function(e) {
+        $ele3.on("touchstart", function(e) {
             e.preventDefault()
             e.stopPropagation()
             $(this).on("touchmove", function(e) {
@@ -142,8 +268,8 @@ function Transform(ele1, ele2) {
 }
 
 function $$(ele1, ele2, ele3, ele4) {
-    if(arguments.length === 2) {
-        return new Transform(ele1, ele2)
+    if(arguments.length === 3) {
+        return new Transform(ele1, ele2, ele3)
     }
 }
 

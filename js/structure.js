@@ -19,33 +19,91 @@ function Body() {
            backdrop-filter: blur(10px);
         }
         #preview .preview__imgArea {
-           width: 70vw;
-           aspect-ratio: 9/16;
+           width: 90vw;
+           height: 160vw;
            position: relative;
-           overflow: hidden;
            border: dashed 3px #000;
            background-color: #fff;
            border-radius: 15px;
+        }
+        #preview .preview__imgArea--wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
         #preview .preview__signatureArea {
            position: absolute;
            top: 0;
            left: 0;
            display: none;
-           width: 50vw;
+           width: 50%;
            z-index: 1;
         }
-        #preview .preview__imgArea img {
+        #preview .preview__imgArea--img {
            width: 100%;
-           /* height: 100%; */
-           border-radius: 10px;
            object-fit: contain;
+        }
+        #preview .preview__signatureArea--img {
+            width: 100%;
+            object-fit: contain;
+        }
+        #preview .preview__imgArea--controller {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: solid 3px #6924d5;
+        }
+        #preview .preview__signatureArea--controller {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: solid 3px #6924d5;
+        }
+        #preview .resize {
+            background-color: #fff;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+        .resize.resize-topleft {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+        }
+        .resize.resize-topright {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+        }
+        .resize.resize-bottomleft {
+            position: absolute;
+            bottom: -10px;
+            left: -10px;
+        }
+        .resize.resize-bottomright {
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+        }
+        #preview .rotate {
+            position: absolute;
+            bottom: -50px;
+            left: 45%;
+            width: 30px;
+            height: 30px;
+            background-color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         #preview .preview__btnArea {
            display: flex;
            flex-direction: row;
            justify-content: center;
            align-items: center;
+           margin-bottom: 20px;
         }
         #preview .preview__btn {
            background-color: rgb(255, 255, 255);
@@ -72,6 +130,7 @@ function Body() {
            margin-top: 10px;
            transition: all .3s;
            display: flex;
+           margin: auto;
         }
         #preview .preview__signatureArea--delete.glow {
            box-shadow: 0 0 50px 15px #e04848;
@@ -157,12 +216,28 @@ function Body() {
     ]
     this.contentArr = [
         `<!-- ========== Preview Image =============== -->
-        <h3 style="color: #fff;">Drag, Zoom, or Rotate</h3>
+        <h3 style="color: #fff; margin-top: 70px;">Drag, Zoom, or Rotate</h3>
         <div class="preview__imgArea">
             <div class="preview__signatureArea">
                 <img class="preview__signatureArea--img" alt="" draggable="false">
+                <div class="preview__signatureArea--controller">
+                    <div class="resize resize-topleft"></div>
+                    <div class="resize resize-topright"></div>
+                    <div class="resize resize-bottomleft"></div>
+                    <div class="resize resize-bottomright"></div>
+                    <div class="rotate"><i class="fa-solid fa-rotate"></i></div>
+                </div>
             </div>
-            <img class="preview__imgArea--img" alt="" draggable="false">
+            <div class="preview__imgArea--wrapper">
+                <img class="preview__imgArea--img" alt="" draggable="false">
+                <div class="preview__imgArea--controller">
+                    <div class="resize resize-topleft"></div>
+                    <div class="resize resize-topright"></div>
+                    <div class="resize resize-bottomleft"></div>
+                    <div class="resize resize-bottomright"></div>
+                    <div class="rotate"><i class="fa-solid fa-rotate"></i></div>
+                </div>
+            </div>
         </div>
         <div class="preview__signatureArea--delete"><i class="fa-solid fa-trash-can"></i></div>
         <div class="preview__btnArea">
@@ -195,7 +270,7 @@ function Body() {
                         <div class="preview theme__option">
                             <div class="loader"></div>
                             <div class="theme-data"></div>
-                            <div class="detail-data"></div>
+                            <div id="detail"></div>
                         </div>
                         <div class="customization__row--block">
                             <div class="template__modify">
