@@ -18,7 +18,7 @@ function Transform(ele1, ele2, ele3) {
         this.x = (x !== undefined) ? x : this.x
         this.y = (y !== undefined) ? y : this.y
         this.scale = (scale !== undefined) ? scale : this.scale
-        this.angle = (scale !== undefined) ? angle : this.angle
+        this.angle = (angle !== undefined) ? angle : this.angle
     }
     this.performTransform = function(x, y, scale, angle) {
         $ele1.css({
@@ -93,34 +93,79 @@ function Transform(ele1, ele2, ele3) {
         return this
     }
 
-    this.zoomTouch = function() {
-        $resize.on("touchstart", function(e) {
-            e.preventDefault()
-            e.stopPropagation()
-            let iVectorX, iVectorY, vectorX, vectorY, initialAngle, currentAngle, dScale, X, Y
-            X = $ele1.offset().left + $ele1.width()/2
-            Y = $ele1.offset().top + $ele1.height()/2
-            iVectorX = e.touches[0].clientX - X
-            iVectorY = e.touches[0].clientY - Y
-            let [posX, posY, scale, angle] = thisObject.exportData()
-            // initialAngle = Math.atan2(iVectorX, iVectorY)
-            $(window).on("touchmove", function(e) {
-                vectorX = e.touches[0].clientX - X
-                vectorY = e.touches[0].clientY - Y
-                // currentAngle = Math.atan2(vectorX, vectorY)
-                // angle -= (currentAngle - initialAngle)*180/Math.PI
-                dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
-                scale *= dScale
-                thisObject.performTransform(posX, posY, scale, angle)
-                iVectorX = vectorX
-                iVectorY = vectorY
-                // initialAngle = currentAngle
-            })
-
-            $(window).on("touchend", function() {
-                $(window).off("touchmove", null)
-                $(window).off("touchend", null)
-                thisObject.setValue(undefined, undefined, scale, angle)
+    this.resizableTouch = function() {
+        $resize.each(function(index, element) {
+            $(element).on("touchstart", function(e) {
+                e.preventDefault()
+                e.stopPropagation()
+                $(element).addClass("show")
+                $(element).find(".circle").addClass("show")
+                let iVectorX, iVectorY, vectorX, vectorY, ratio, width1, dX, dY
+                ratio = $ele1.width()/$ele1.height()
+                iVectorX = e.touches[0].clientX
+                iVectorY = e.touches[0].clientY
+                let [posX, posY, scale, angle] = thisObject.exportData()
+                $(window).on("touchmove", function(e) {
+                    vectorX = e.touches[0].clientX
+                    vectorY = e.touches[0].clientY
+                    dX = vectorX - iVectorX
+                    dY = vectorY - iVectorY
+                    width1 = $ele1.width()
+                    
+                    if($(element).hasClass("resize-bottomright")) {
+                        $ele1.css({
+                            width: width1 + dX,
+                            height: width1/ratio + dY
+                        })
+                        $ele3.css({
+                            width: width1 + dX,
+                            height: width1/ratio + dY
+                        })
+                    } else if ($(element).hasClass("resize-bottomleft")) {
+                        posX += dX
+                        $ele1.css({
+                            width: width1 - dX,
+                            height: width1/ratio + dY
+                        })
+                        $ele3.css({
+                            width: width1 - dX,
+                            height: width1/ratio + dY
+                        })
+                    } else if ($(element).hasClass("resize-topright")) {
+                        posY += dY
+                        $ele1.css({
+                            width: width1 + dX,
+                            height: width1/ratio - dY
+                        })
+                        $ele3.css({
+                            width: width1 + dX,
+                            height: width1/ratio - dY
+                        })
+                    } else {
+                        
+                        posX += dX
+                        posY += dY
+                        $ele1.css({
+                            width: width1 - dX,
+                            height: width1/ratio - dY
+                        })
+                        $ele3.css({
+                            width: width1 - dX,
+                            height: width1/ratio - dY
+                        })
+                    }
+                    thisObject.performTransform(posX, posY, scale, angle)
+                    iVectorX = vectorX
+                    iVectorY = vectorY
+                })
+    
+                $(window).on("touchend", function() {
+                    $(window).off("touchmove", null)
+                    $(window).off("touchend", null)
+                    thisObject.setValue(posX, posY, scale, angle)
+                    $(element).removeClass("show")
+                    $(element).find(".circle").removeClass("show")
+                })
             })
         })
         return this
@@ -130,63 +175,101 @@ function Transform(ele1, ele2, ele3) {
         $rotate.on("touchstart", function(e) {
             e.preventDefault()
             e.stopPropagation()
-            let iVectorX, iVectorY, vectorX, vectorY, initialAngle, currentAngle, dScale, X, Y
-            X = $ele1.offset().left + $ele1.width()/2
-            Y = $ele1.offset().top + $ele1.height()/2
-            iVectorX = e.touches[0].clientX - X
-            iVectorY = e.touches[0].clientY - Y
+            let vectorX, vectorY, X, Y
+            X = $ele3.offset().left + $ele3.width()/2
+            Y = $ele3.offset().top + $ele3.height()/2
             let [posX, posY, scale, angle] = thisObject.exportData()
-            initialAngle = Math.atan2(iVectorX, iVectorY)
             $(window).on("touchmove", function(e) {
-                vectorX = e.touches[0].clientX - X
-                vectorY = e.touches[0].clientY - Y
-                currentAngle = Math.atan2(vectorX, vectorY)
-                angle -= (currentAngle - initialAngle)*180/Math.PI
-                // dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
-                // scale *= dScale
+                vectorX = X - e.touches[0].clientX - window.scrollX
+                vectorY = Y - e.touches[0].clientY - window.scrollY
+
+                angle = Math.atan2(vectorY, vectorX) * 180 / Math.PI + 90
+
                 thisObject.performTransform(posX, posY, scale, angle)
-                iVectorX = vectorX
-                iVectorY = vectorY
-                initialAngle = currentAngle
             })
 
             $(window).on("touchend", function() {
                 $(window).off("touchmove", null)
                 $(window).off("touchend", null)
-                thisObject.setValue(undefined, undefined, scale, angle)
+                thisObject.setValue(undefined, undefined, undefined, angle)
             })
         })
         return this
     }
 
-    this.zoomDesk = function() {
-        $resize.on("mousedown", function(e) {
-            e.preventDefault()
-            e.stopPropagation()
-            let iVectorX, iVectorY, vectorX, vectorY, initialAngle, currentAngle, dScale, X, Y
-            X = $ele1.offset().left + $ele1.width()/2
-            Y = $ele1.offset().top + $ele1.height()/2
-            iVectorX = e.clientX - X
-            iVectorY = e.clientY - Y
-            let [posX, posY, scale, angle] = thisObject.exportData()
-            // initialAngle = Math.atan2(iVectorX, iVectorY)
-            $(window).on("mousemove", function(e) {
-                vectorX = e.clientX - X
-                vectorY = e.clientY - Y
-                // currentAngle = Math.atan2(vectorX, vectorY)
-                // angle -= (currentAngle - initialAngle)*180/Math.PI
-                dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
-                scale *= dScale
-                thisObject.performTransform(posX, posY, scale, angle)
-                iVectorX = vectorX
-                iVectorY = vectorY
-                // initialAngle = currentAngle
-            })
-
-            $(window).on("mouseup", function() {
-                $(window).off("mousemove", null)
-                $(window).off("mouseup", null)
-                thisObject.setValue(undefined, undefined, scale, angle)
+    this.resizableDesk = function() {
+        $resize.each(function(index, element) {
+            $(element).on("mousedown", function(e) {
+                e.preventDefault()
+                e.stopPropagation()
+                $(element).addClass("show")
+                $(element).find(".circle").addClass("show")
+                let iVectorX, iVectorY, vectorX, vectorY, ratio, width1, dX, dY
+                ratio = $ele1.width()/$ele1.height()
+                iVectorX = e.clientX
+                iVectorY = e.clientY
+                let [posX, posY, scale, angle] = thisObject.exportData()
+                $(window).on("mousemove", function(e) {
+                    vectorX = e.clientX
+                    vectorY = e.clientY
+                    dX = vectorX - iVectorX
+                    dY = vectorY - iVectorY
+                    width1 = $ele1.width()
+                    
+                    if($(element).hasClass("resize-bottomright")) {
+                        $ele1.css({
+                            width: width1 + dX,
+                            height: width1/ratio + dY
+                        })
+                        $ele3.css({
+                            width: width1 + dX,
+                            height: width1/ratio + dY
+                        })
+                    } else if ($(element).hasClass("resize-bottomleft")) {
+                        posX += dX
+                        $ele1.css({
+                            width: width1 - dX,
+                            height: width1/ratio + dY
+                        })
+                        $ele3.css({
+                            width: width1 - dX,
+                            height: width1/ratio + dY
+                        })
+                    } else if ($(element).hasClass("resize-topright")) {
+                        posY += dY
+                        $ele1.css({
+                            width: width1 + dX,
+                            height: width1/ratio - dY
+                        })
+                        $ele3.css({
+                            width: width1 + dX,
+                            height: width1/ratio - dY
+                        })
+                    } else {
+                        
+                        posX += dX
+                        posY += dY
+                        $ele1.css({
+                            width: width1 - dX,
+                            height: width1/ratio - dY
+                        })
+                        $ele3.css({
+                            width: width1 - dX,
+                            height: width1/ratio - dY
+                        })
+                    }
+                    thisObject.performTransform(posX, posY, scale, angle)
+                    iVectorX = vectorX
+                    iVectorY = vectorY
+                })
+    
+                $(window).on("mouseup", function() {
+                    $(window).off("mousemove", null)
+                    $(window).off("mouseup", null)
+                    thisObject.setValue(posX, posY, scale, angle)
+                    $(element).removeClass("show")
+                    $(element).find(".circle").removeClass("show")
+                })
             })
         })
         return this
@@ -219,7 +302,7 @@ function Transform(ele1, ele2, ele3) {
             $(window).on("mouseup", function() {
                 $(window).off("mousemove", null)
                 $(window).off("mouseup", null)
-                thisObject.setValue(undefined, undefined, scale, angle)
+                thisObject.setValue(undefined, undefined, undefined, angle)
             })
         })
         return this

@@ -42,10 +42,12 @@ function Body() {
         #preview .preview__imgArea--img {
            width: 100%;
            object-fit: contain;
+           position: relative;
         }
         #preview .preview__signatureArea--img {
             width: 100%;
             object-fit: contain;
+            position: relative;
         }
         #preview .preview__imgArea--controller {
             position: absolute;
@@ -65,6 +67,26 @@ function Body() {
             height: 20px;
             border-radius: 50%;
             box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            transition: all .1s linear;
+        }
+        #preview .resize.show {
+            background-color: #6924d5;
+        }
+        #preview .resize > .circle {
+            background-color: #f0f0f0a8;
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            z-index: -1;
+            opacity: 0;
+            transition: all .1s linear;
+        }
+        #preview .resize > .circle.show {
+            opacity: 1;
         }
         .resize.resize-topleft {
             position: absolute;
@@ -216,25 +238,25 @@ function Body() {
     ]
     this.contentArr = [
         `<!-- ========== Preview Image =============== -->
-        <h3 style="color: #fff; margin-top: 70px;">Drag, Zoom, or Rotate</h3>
+        <h3 style="color: #fff; margin-top: 20px;">Drag, Zoom, or Rotate</h3>
         <div class="preview__imgArea">
             <div class="preview__signatureArea">
                 <img class="preview__signatureArea--img" alt="" draggable="false">
                 <div class="preview__signatureArea--controller">
-                    <div class="resize resize-topleft"></div>
-                    <div class="resize resize-topright"></div>
-                    <div class="resize resize-bottomleft"></div>
-                    <div class="resize resize-bottomright"></div>
+                    <div class="resize resize-topleft"><div class="circle"></div></div>
+                    <div class="resize resize-topright"><div class="circle"></div></div>
+                    <div class="resize resize-bottomleft"><div class="circle"></div></div>
+                    <div class="resize resize-bottomright"><div class="circle"></div></div>
                     <div class="rotate"><i class="fa-solid fa-rotate"></i></div>
                 </div>
             </div>
             <div class="preview__imgArea--wrapper">
                 <img class="preview__imgArea--img" alt="" draggable="false">
                 <div class="preview__imgArea--controller">
-                    <div class="resize resize-topleft"></div>
-                    <div class="resize resize-topright"></div>
-                    <div class="resize resize-bottomleft"></div>
-                    <div class="resize resize-bottomright"></div>
+                    <div class="resize resize-topleft"><div class="circle"></div></div>
+                    <div class="resize resize-topright"><div class="circle"></div></div>
+                    <div class="resize resize-bottomleft"><div class="circle"></div></div>
+                    <div class="resize resize-bottomright"><div class="circle"></div></div>
                     <div class="rotate"><i class="fa-solid fa-rotate"></i></div>
                 </div>
             </div>
