@@ -29,6 +29,18 @@ function Transform(ele1, ele2, ele3) {
         })
     }
 
+    this.performResize = function(width, height) {
+        $ele1.css({
+            width: width,
+            height: height,
+
+        })
+        $ele3.css({
+            width: width,
+            height: height
+        })
+    }
+
     this.exportData = function() {
         return [this.x, this.y, this.scale, this.angle]
     }
@@ -94,69 +106,92 @@ function Transform(ele1, ele2, ele3) {
     }
 
     this.resizableTouch = function() {
+        function calculateRotate(x, y, cx, cy, angle) {
+            angle = angle * Math.PI / 180
+            return [
+                (x - cx) * Math.cos(angle) - (y - cy) * Math.sin(angle) + cx,
+                (x - cx) * Math.sin(angle) + (y - cy) * Math.cos(angle) + cy
+            ]
+        }
+
+        function getCenter($ele, posX, posY) {
+            return [
+                posX + $ele.width()/2,
+                posY + $ele.height()/2
+            ]
+        }
+
         $resize.each(function(index, element) {
             $(element).on("touchstart", function(e) {
                 e.preventDefault()
                 e.stopPropagation()
                 $(element).addClass("show")
                 $(element).find(".circle").addClass("show")
-                let iVectorX, iVectorY, vectorX, vectorY, ratio, width1, dX, dY
-                ratio = $ele1.width()/$ele1.height()
-                iVectorX = e.touches[0].clientX
-                iVectorY = e.touches[0].clientY
+                let r = $ele3.width() / $ele3.height()
                 let [posX, posY, scale, angle] = thisObject.exportData()
+                let x0 = $(".preview__imgArea--wrapper").offset().left - window.scrollX
+                let y0 = $(".preview__imgArea--wrapper").offset().top - window.scrollY
+                let [cx, cy] = getCenter($ele3, posX, posY)
+                let rotatedCorner, bottomright = false, bottomleft = false, topright = false
+                let dx
+                if($(element).hasClass("resize-bottomright")) {
+                    rotatedCorner = calculateRotate(posX, posY, cx, cy, angle)
+                    bottomright = true
+                } else if ($(element).hasClass("resize-bottomleft")) {
+                    rotatedCorner = calculateRotate(posX + $ele3.width(), posY, cx, cy, angle)
+                    bottomleft = true
+                } else if ($(element).hasClass("resize-topright")) {
+                    rotatedCorner = calculateRotate(posX, posY + $ele3.height(), cx, cy, angle)
+                    topright = true
+                } else {
+                    rotatedCorner = calculateRotate(posX + $ele3.width(), posY + $ele3.height(), cx, cy, angle)
+                }
                 $(window).on("touchmove", function(e) {
-                    vectorX = e.touches[0].clientX
-                    vectorY = e.touches[0].clientY
-                    dX = vectorX - iVectorX
-                    dY = vectorY - iVectorY
-                    width1 = $ele1.width()
-                    
-                    if($(element).hasClass("resize-bottomright")) {
-                        $ele1.css({
-                            width: width1 + dX,
-                            height: width1/ratio + dY
-                        })
-                        $ele3.css({
-                            width: width1 + dX,
-                            height: width1/ratio + dY
-                        })
-                    } else if ($(element).hasClass("resize-bottomleft")) {
-                        posX += dX
-                        $ele1.css({
-                            width: width1 - dX,
-                            height: width1/ratio + dY
-                        })
-                        $ele3.css({
-                            width: width1 - dX,
-                            height: width1/ratio + dY
-                        })
-                    } else if ($(element).hasClass("resize-topright")) {
-                        posY += dY
-                        $ele1.css({
-                            width: width1 + dX,
-                            height: width1/ratio - dY
-                        })
-                        $ele3.css({
-                            width: width1 + dX,
-                            height: width1/ratio - dY
-                        })
+                    let x = e.touches[0].clientX - x0
+                    let y = e.touches[0].clientY - y0
+                    let newCenter = [
+                        (rotatedCorner[0] + x) / 2,
+                        (rotatedCorner[1] + y) / 2
+                    ]
+
+                    let newCorner = calculateRotate(rotatedCorner[0], rotatedCorner[1], newCenter[0], newCenter[1], -angle)
+                    let newOppositeCorner = calculateRotate(x, y, newCenter[0], newCenter[1], -angle)
+
+                    if(bottomright) {
+                        dx = newOppositeCorner[0] - newCorner[0]
+                        posX = newCorner[0]
+                        posY = newCorner[1]
+                    } else if (bottomleft) {
+                        dx = - (newOppositeCorner[0] - newCorner[0])
+                        posX = newCorner[0] + $ele3.width()
+                        posY = newCorner[1]
+                    } else if (topright) {
+                        dx = newOppositeCorner[0] - newCorner[0]
+                        posX = newCorner[0]
+                        posY = newCorner[1] + $ele3.height()
                     } else {
-                        
-                        posX += dX
-                        posY += dY
-                        $ele1.css({
-                            width: width1 - dX,
-                            height: width1/ratio - dY
-                        })
-                        $ele3.css({
-                            width: width1 - dX,
-                            height: width1/ratio - dY
-                        })
+                        dx = - (newOppositeCorner[0] - newCorner[0])
+                        posX = newCorner[0] + $ele3.width()
+                        posY = newCorner[1] + $ele3.height()
                     }
+                    
+                    thisObject.performResize(dx,dx / r)
+
+                    if(bottomright) {
+                        posX = newCorner[0]
+                        posY = newCorner[1]
+                    } else if (bottomleft) {
+                        posX = newCorner[0] - $ele3.width()
+                        posY = newCorner[1]
+                    } else if (topright) {
+                        posX = newCorner[0]
+                        posY = newCorner[1] - $ele3.height()
+                    } else {
+                        posX = newCorner[0] - $ele3.width()
+                        posY = newCorner[1] - $ele3.height()
+                    }
+
                     thisObject.performTransform(posX, posY, scale, angle)
-                    iVectorX = vectorX
-                    iVectorY = vectorY
                 })
     
                 $(window).on("touchend", function() {
@@ -198,69 +233,92 @@ function Transform(ele1, ele2, ele3) {
     }
 
     this.resizableDesk = function() {
+        function calculateRotate(x, y, cx, cy, angle) {
+            angle = angle * Math.PI / 180
+            return [
+                (x - cx) * Math.cos(angle) - (y - cy) * Math.sin(angle) + cx,
+                (x - cx) * Math.sin(angle) + (y - cy) * Math.cos(angle) + cy
+            ]
+        }
+
+        function getCenter($ele, posX, posY) {
+            return [
+                posX + $ele.width()/2,
+                posY + $ele.height()/2
+            ]
+        }
+
         $resize.each(function(index, element) {
             $(element).on("mousedown", function(e) {
                 e.preventDefault()
                 e.stopPropagation()
                 $(element).addClass("show")
                 $(element).find(".circle").addClass("show")
-                let iVectorX, iVectorY, vectorX, vectorY, ratio, width1, dX, dY
-                ratio = $ele1.width()/$ele1.height()
-                iVectorX = e.clientX
-                iVectorY = e.clientY
+                let r = $ele3.width() / $ele3.height()
                 let [posX, posY, scale, angle] = thisObject.exportData()
+                let x0 = $(".preview__imgArea--wrapper").offset().left - window.scrollX
+                let y0 = $(".preview__imgArea--wrapper").offset().top - window.scrollY
+                let [cx, cy] = getCenter($ele3, posX, posY)
+                let rotatedCorner, bottomright = false, bottomleft = false, topright = false
+                let dx
+                if($(element).hasClass("resize-bottomright")) {
+                    rotatedCorner = calculateRotate(posX, posY, cx, cy, angle)
+                    bottomright = true
+                } else if ($(element).hasClass("resize-bottomleft")) {
+                    rotatedCorner = calculateRotate(posX + $ele3.width(), posY, cx, cy, angle)
+                    bottomleft = true
+                } else if ($(element).hasClass("resize-topright")) {
+                    rotatedCorner = calculateRotate(posX, posY + $ele3.height(), cx, cy, angle)
+                    topright = true
+                } else {
+                    rotatedCorner = calculateRotate(posX + $ele3.width(), posY + $ele3.height(), cx, cy, angle)
+                }
                 $(window).on("mousemove", function(e) {
-                    vectorX = e.clientX
-                    vectorY = e.clientY
-                    dX = vectorX - iVectorX
-                    dY = vectorY - iVectorY
-                    width1 = $ele1.width()
-                    
-                    if($(element).hasClass("resize-bottomright")) {
-                        $ele1.css({
-                            width: width1 + dX,
-                            height: width1/ratio + dY
-                        })
-                        $ele3.css({
-                            width: width1 + dX,
-                            height: width1/ratio + dY
-                        })
-                    } else if ($(element).hasClass("resize-bottomleft")) {
-                        posX += dX
-                        $ele1.css({
-                            width: width1 - dX,
-                            height: width1/ratio + dY
-                        })
-                        $ele3.css({
-                            width: width1 - dX,
-                            height: width1/ratio + dY
-                        })
-                    } else if ($(element).hasClass("resize-topright")) {
-                        posY += dY
-                        $ele1.css({
-                            width: width1 + dX,
-                            height: width1/ratio - dY
-                        })
-                        $ele3.css({
-                            width: width1 + dX,
-                            height: width1/ratio - dY
-                        })
+                    let x = e.clientX - x0
+                    let y = e.clientY - y0
+                    let newCenter = [
+                        (rotatedCorner[0] + x) / 2,
+                        (rotatedCorner[1] + y) / 2
+                    ]
+
+                    let newCorner = calculateRotate(rotatedCorner[0], rotatedCorner[1], newCenter[0], newCenter[1], -angle)
+                    let newOppositeCorner = calculateRotate(x, y, newCenter[0], newCenter[1], -angle)
+
+                    if(bottomright) {
+                        dx = newOppositeCorner[0] - newCorner[0]
+                        posX = newCorner[0]
+                        posY = newCorner[1]
+                    } else if (bottomleft) {
+                        dx = - (newOppositeCorner[0] - newCorner[0])
+                        posX = newCorner[0] + $ele3.width()
+                        posY = newCorner[1]
+                    } else if (topright) {
+                        dx = newOppositeCorner[0] - newCorner[0]
+                        posX = newCorner[0]
+                        posY = newCorner[1] + $ele3.height()
                     } else {
-                        
-                        posX += dX
-                        posY += dY
-                        $ele1.css({
-                            width: width1 - dX,
-                            height: width1/ratio - dY
-                        })
-                        $ele3.css({
-                            width: width1 - dX,
-                            height: width1/ratio - dY
-                        })
+                        dx = - (newOppositeCorner[0] - newCorner[0])
+                        posX = newCorner[0] + $ele3.width()
+                        posY = newCorner[1] + $ele3.height()
                     }
+                    
+                    thisObject.performResize(dx,dx / r)
+
+                    if(bottomright) {
+                        posX = newCorner[0]
+                        posY = newCorner[1]
+                    } else if (bottomleft) {
+                        posX = newCorner[0] - $ele3.width()
+                        posY = newCorner[1]
+                    } else if (topright) {
+                        posX = newCorner[0]
+                        posY = newCorner[1] - $ele3.height()
+                    } else {
+                        posX = newCorner[0] - $ele3.width()
+                        posY = newCorner[1] - $ele3.height()
+                    }
+
                     thisObject.performTransform(posX, posY, scale, angle)
-                    iVectorX = vectorX
-                    iVectorY = vectorY
                 })
     
                 $(window).on("mouseup", function() {
@@ -279,24 +337,17 @@ function Transform(ele1, ele2, ele3) {
         $rotate.on("mousedown", function(e) {
             e.preventDefault()
             e.stopPropagation()
-            let iVectorX, iVectorY, vectorX, vectorY, initialAngle, currentAngle, dScale, X, Y
-            X = $ele1.offset().left + $ele1.width()/2
-            Y = $ele1.offset().top + $ele1.height()/2
-            iVectorX = e.clientX - X
-            iVectorY = e.clientY - Y
+            let vectorX, vectorY, X, Y
+            X = $ele3.offset().left + $ele3.width()/2
+            Y = $ele3.offset().top + $ele3.height()/2
             let [posX, posY, scale, angle] = thisObject.exportData()
-            initialAngle = Math.atan2(iVectorX, iVectorY)
             $(window).on("mousemove", function(e) {
-                vectorX = e.clientX - X
-                vectorY = e.clientY - Y
-                currentAngle = Math.atan2(vectorX, vectorY)
-                angle -= (currentAngle - initialAngle)*180/Math.PI
-                // dScale = Math.sqrt(vectorX*vectorX + vectorY*vectorY)/Math.sqrt(iVectorX*iVectorX + iVectorY*iVectorY)
-                // scale *= dScale
+                vectorX = X - e.clientX - window.scrollX
+                vectorY = Y - e.clientY - window.scrollY
+
+                angle = Math.atan2(vectorY, vectorX) * 180 / Math.PI + 90
+
                 thisObject.performTransform(posX, posY, scale, angle)
-                iVectorX = vectorX
-                iVectorY = vectorY
-                initialAngle = currentAngle
             })
 
             $(window).on("mouseup", function() {

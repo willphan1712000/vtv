@@ -54,7 +54,7 @@ fileInputTv.onchange = (e) => {
                     height: previewImg.height
                 })
                 // dataArr.previewImg = $$(".preview__imgArea--img", undefined).draggable().distort()
-                dataArr.previewImg = $$(".preview__imgArea--img", undefined, ".preview__imgArea--controller").draggableTouch().draggableDesk().resizableTouch().rotateTouch().resizableDesk()
+                dataArr.previewImg = $$(".preview__imgArea--img", undefined, ".preview__imgArea--controller").draggableTouch().draggableDesk().resizableTouch().rotateTouch().resizableDesk().rotateDesk()
                 dataArr.previewSignature = $$("#preview .preview__signatureArea--img", ".preview__signatureArea--delete", ".preview__signatureArea--controller").draggableTouch().draggableDesk().resizableTouch().resizableDesk().rotateTouch().rotateDesk().collide(function() {
                     // if touched
                     $(".preview__signatureArea--delete").addClass("glow")
