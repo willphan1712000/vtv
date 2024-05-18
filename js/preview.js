@@ -1027,4 +1027,88 @@ function theme() {
     return new Theme()
 }
 
-export { initialFetch, fetchImages, colorTable, detailCustom, modifyTemplateProcess, theme, detail }
+function BackgroundForUploadImg(container) {
+    const thisObject = this
+    this.container = container
+    this.eleClass = "img-ele"
+    this.src = [
+        "/img/background/0.jpg",
+        "/img/background/1.jpg",
+        "/img/background/2.jpg",
+        "/img/background/3.jpg",
+        "/img/background/4.jpg",
+        "/img/background/5.jpg",
+        "/img/background/6.jpg",
+    ]
+
+    this.render = function() {
+        for(let i = 0; i < this.src.length; i++) {
+            $(this.container).append(`
+                <div class="${this.eleClass}" data-id="${i}">
+                    <img src=${this.src[i]} alt="">
+                </div>
+            `)
+        }
+        return this
+    }
+
+    this.css = `
+        ${this.container} {
+            overflow-x: auto;
+            overflow-y: hidden;
+            border: 2px solid #000;
+            width: 90%;
+            height: 8%;
+            margin-top: 10px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: row;
+        }
+
+        ${this.container} img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        ${this.container} .img-ele {
+            margin: 5px;
+            aspect-ratio: 1;
+            position: relative;
+        }
+
+        ${this.container} .show:after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            border-radius: 50%;
+            border: 3px solid var(--main-color);
+            width: 100%;
+            height: 100%;
+        }
+    `
+
+    this.addCSS = function() {
+        const styleElement = document.createElement("style")
+        styleElement.textContent = this.css
+        document.head.appendChild(styleElement)
+        return this
+    }
+
+    this.preview = function(preview) {
+        $(`.${this.eleClass}`).click(function(e) {
+            const id = e.currentTarget.getAttribute('data-id')
+            $(`.${thisObject.eleClass}`).removeClass("show")
+            $(preview).attr("src", "/img/background/" + id + ".jpg")
+            $(e.currentTarget).addClass("show")
+        })
+        return this
+    }
+}
+
+function backgroundForUploadImg(container) {
+    return new BackgroundForUploadImg(container)
+}
+export { initialFetch, fetchImages, colorTable, detailCustom, modifyTemplateProcess, theme, detail, backgroundForUploadImg }
