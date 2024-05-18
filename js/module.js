@@ -382,6 +382,7 @@ function Transform(ele1, ele2, ele3) {
             })
             $(this).on("touchend", function() {
                 if(thisObject.isCollided()) {
+                    thisObject.performTransform(0, 0, 1, 0)
                     thisObject.setValue(0, 0, 1, 0)
                     let [x, y, scale, angle] = thisObject.exportData()
                     thisObject.performTransform($(this), x, y, scale, angle)

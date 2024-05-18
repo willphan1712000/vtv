@@ -1,5 +1,5 @@
 import {body} from './structure.js'
-import { initialFetch, fetchImages, colorTable, detailCustom, modifyTemplateProcess } from './preview.js'
+import { initialFetch, fetchImages, colorTable, detailCustom, modifyTemplateProcess, backgroundForUploadImg } from './preview.js'
 import { checkSubs, colorConcept, preventDefault, owneraccount, time } from './module.js'
 
 switch(type) {
@@ -19,6 +19,7 @@ switch(type) {
         colorTable()
         detailCustom()
         modifyTemplateProcess()
+        backgroundForUploadImg(".background-area").render().addCSS().preview(".background-preview")
         // End
         
         checkSubs()

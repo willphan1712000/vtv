@@ -26,6 +26,12 @@ function Body() {
            background-color: #fff;
            border-radius: 15px;
         }
+        #preview .preview__imgArea .background-preview {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         #preview .preview__imgArea--wrapper {
             width: 100%;
             height: 100%;
@@ -153,9 +159,14 @@ function Body() {
            transition: all .3s;
            display: flex;
            margin: auto;
+           position: absolute;
+           bottom: 5%;
+           left: calc(50% - 25px);
+           opacity: 5%;
         }
         #preview .preview__signatureArea--delete.glow {
            box-shadow: 0 0 50px 15px #e04848;
+           opacity: 100%;
         }
         
         /* Signature box */
@@ -240,6 +251,7 @@ function Body() {
         `<!-- ========== Preview Image =============== -->
         <h3 style="color: #fff; margin-top: 20px;">Drag, Zoom, or Rotate</h3>
         <div class="preview__imgArea">
+            <img class="background-preview">
             <div class="preview__signatureArea">
                 <img class="preview__signatureArea--img" alt="" draggable="false">
                 <div class="preview__signatureArea--controller">
@@ -260,8 +272,9 @@ function Body() {
                     <div class="rotate"><i class="fa-solid fa-rotate"></i></div>
                 </div>
             </div>
+            <div class="preview__signatureArea--delete"><i class="fa-solid fa-trash-can"></i></div>
         </div>
-        <div class="preview__signatureArea--delete"><i class="fa-solid fa-trash-can"></i></div>
+        <div class="background-area"></div>
         <div class="preview__btnArea">
             <div class="preview__btn preview__btn--add"><i class="fa-solid fa-signature"></i> Add Signature</div>
             <input type="file" name="" hidden accept="image/*">

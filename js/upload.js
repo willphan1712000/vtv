@@ -5,6 +5,7 @@ const progressLabel = document.querySelector("#uploadingArea label")
 const signatureInput = document.querySelector("#preview .preview__btnArea input")
 const previewImg = document.querySelector("#preview .preview__imgArea--img")
 const previewSignature = document.querySelector("#preview .preview__signatureArea--img")
+const background = document.querySelector(".background-preview")
 const previewFrame = document.querySelector('#preview .preview__imgArea')
 import {$$,imageProcess} from './module.js'
 
@@ -89,9 +90,12 @@ fileInputTv.onchange = (e) => {
                     const ratio = 16/9
                     const width = 1200
                     var [canvas, ctx] = imgProcess.createCanvas(width, ratio*width)
+
+                    // draw background iamge on canvas
+                    let [ctxBackground,] = imgProcess.drawImage(background, ctx, 0, 0, 1, 0, canvas, background.getBoundingClientRect().width, background.getBoundingClientRect().height)
     
                     // draw outer image on canvas
-                    var [ctxReturned, srcEncoded] = imgProcess.drawImage(previewImg, ctx, imgX, imgY, imgScale, imgAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
+                    let [ctxReturned, srcEncoded] = imgProcess.drawImage(previewImg, ctxBackground, imgX, imgY, imgScale, imgAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
                     // check if signature is added
                     if(dataArr.hasSignature && !dataArr.previewSignature.isCollided()) {
                         // Get signature dimensions
