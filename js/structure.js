@@ -23,8 +23,8 @@ function Body() {
             margin-top: 10px;
         }
         #preview .preview__imgArea {
-           width: 70vw;
-           height: 124vw;
+           width: 65vw;
+           height: 115.56vw;
            position: relative;
            border: dashed 3px #000;
            background-color: #fff;
