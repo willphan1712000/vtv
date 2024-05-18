@@ -1058,7 +1058,6 @@ function BackgroundForUploadImg(container) {
             overflow-y: hidden;
             border: 2px solid #000;
             width: 90%;
-            height: 8%;
             margin-top: 10px;
             border-radius: 20px;
             display: flex;
