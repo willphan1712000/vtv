@@ -4,7 +4,8 @@ function Body() {
         `/* =========== Preview Box Style ============== */
         #preview {
            width: 100%;
-           height: 100%;
+           height: 100vh;
+           height: 100svh;
            overflow: hidden;
            z-index: 99;
            position: absolute;
