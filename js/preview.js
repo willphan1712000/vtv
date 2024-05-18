@@ -1072,9 +1072,10 @@ function BackgroundForUploadImg(container) {
         }
 
         ${this.container} .img-ele {
-            margin: 5px;
             aspect-ratio: 1;
             position: relative;
+            height: 100%;
+            padding: 5px;
         }
 
         ${this.container} .show:after {
