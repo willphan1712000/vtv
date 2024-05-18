@@ -1,5 +1,5 @@
 <?php
-    $v = 3.7;
+    $v = 3.8;
     // $sessionDuration = 60*20;
     $sessionDuration = 60*60;
     $title = basename(dirname(__DIR__));
@@ -15,7 +15,7 @@
     $multiImgMax = 30;
     $multiVideoMax = 2;
     $maxVideoDuration = 60; // seconds
-    $copyright = "© ".date("Y")." All in Click, LLC. All rights reserved.";
+    $copyright = "© ".date("Y")." All in Click, LLC. All rights reserved. ".$v;
 
     function dd($value) {
         echo "<pre>";

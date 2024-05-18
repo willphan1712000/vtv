@@ -14,10 +14,13 @@ function Body() {
            left: 0;
            background-color: #00000063;
            display: none;
-           justify-content: center;
            align-items: center;
            flex-direction: column;
            backdrop-filter: blur(10px);
+        }
+        #preview > h3 {
+            color: #fff;
+            margin-top: 10px;
         }
         #preview .preview__imgArea {
            width: 70vw;
@@ -250,7 +253,7 @@ function Body() {
     ]
     this.contentArr = [
         `<!-- ========== Preview Image =============== -->
-        <h3 style="color: #fff; margin-top: 20px;">Drag, Zoom, or Rotate</h3>
+        <h3>Drag, Zoom, or Rotate</h3>
         <div class="preview__imgArea">
             <img class="background-preview">
             <div class="preview__signatureArea">
