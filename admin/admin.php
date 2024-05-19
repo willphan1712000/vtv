@@ -54,8 +54,7 @@ while($row = mysqli_fetch_array($countQuery)) {
 		var maxVideoDuration = "<?= $maxVideoDuration;?>"
 		var type = "admin"
 	</script>
-	<script type="module" src="/js/main.js?v=<?=$v;?>" defer></script>
+	<script type="module" src="/dist/main.js?v=<?=$v;?>" defer></script>
     <script type="module" src="/js/upload.js?v=<?=$v;?>" defer></script>
-    <!-- <script src="/js/manualSlide.js?v=<?=$v;?>"></script> -->
 </body>
 </html>
