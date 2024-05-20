@@ -62,12 +62,18 @@ $.ajax({
          } else if (iData.theme != Data.theme) {
             iData.theme = Data.theme
             // themeRefresh(Data)
-            location.reload()
-         } else if (iData.bgcolor != Data.bgcolor || iData.detail != Data.detail) {
+            // location.reload()
+         } else if (iData.bgcolor != Data.bgcolor) {
             iData.bgcolor = Data.bgcolor
+            iData.bgcolor.includes("linear-gradient") ? $(".slider").css({backgroundImage: iData.bgcolor}) : $(".slider").css({backgroundImage: "none", backgroundColor: iData.bgcolor})
+         } else if (iData.detail != Data.detail) {
             iData.detail = Data.detail
-            // colordetail([Data.bgcolor, Data.detail])
-            location.reload()
+            if(iData.detail != "none") {
+               detailObj.addDOM("#detail", iData.detail, null)
+               detailObj.addCSS(iData.detail)
+            } else {
+               document.querySelector("#detail").innerHTML = ''
+            }
          } else if (iData.img.length < Data.img.length) {
             iData.img = Data.img
             let newFile = Data.img[Data.img.length - 1].filename // Get the last element from Data, which is the newest uploaded data
@@ -131,6 +137,10 @@ $.ajax({
 })
 function fetchTheme(array) {
    return new Promise((res, rej) => {
+      // ==================
+      // Attention, because choose template is removed so the default template is 4
+      array.theme = 4
+      // ==================
       themeObj.addDOM("#tvScreen", array.theme, null)
       themeObj.addCSS(array.theme)
       //JS FOR HTML AND CSS
@@ -216,6 +226,7 @@ function fetchTheme(array) {
             $(".parallax use").css("fill", array.bgcolor);
             document.querySelector(".textSlider__left").style.backgroundColor = array.bgcolor
             document.querySelector(".textSlider__right").style.backgroundColor = array.bgcolor
+            array.bgcolor.includes("linear-gradient") ? $(".slider").css({backgroundImage: array.bgcolor}) : $(".slider").css({backgroundColor: array.bgcolor})
             res()
          })
       }

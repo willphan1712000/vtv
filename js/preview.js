@@ -27,6 +27,12 @@ function initialFetch() {
                         } else {
                             data.detail = e[0].detail
                         }
+
+                        // ==================
+                        // Attention, because choose template is removed so the default template is 4
+                        e[0].theme = 4
+                        // ==================
+                        
                         $(".theme__option").addClass("theme__option--" + e[0].theme);
                         themeObj.addDOM(".theme__option .theme-data", e[0].theme, function() {
                             const $slider = $(".theme__option .theme-data .slider");
@@ -34,9 +40,10 @@ function initialFetch() {
                             const $right = $(".theme__option .theme-data .textSlider__right");
                             $left.css("background-color", data.color);
                             $right.css("background-color", data.color);
+                            data.color.includes("linear-gradient") ? $slider.css({backgroundImage: data.color}) : $slider.css({backgroundColor: data.color})
                             $(".preview .theme-data .wave-area .parallax > use").css("fill", data.color)
                             if(data.detail != "none") {
-                                detailObj.addDOM(".theme__option .detail-data", data.detail, null)
+                                detailObj.addDOM(".theme__option #detail", data.detail, null)
                             }
                             $.post("/data/imgAdmin.php", {
                                 req: "single"
@@ -82,20 +89,11 @@ function initialFetch() {
                                 }, 500)
                             });
                             // TV COLOR PREVIEW
-                            $('.bg__colorTable--tv input[name="tvradio"]').on("click",()=>{
-                                $(".preview .theme-data .textSlider__left").css("background-color", $('.bg__colorTable--tv input[name="tvradio"]:checked').val());
-                                $(".preview .theme-data .textSlider__right").css("background-color", $('.bg__colorTable--tv input[name="tvradio"]:checked').val());
-                                $(".preview .theme-data .wave-area .parallax > use").css("fill", $('.bg__colorTable--tv input[name="tvradio"]:checked').val());
-                            })
-                            // DETAIL PREVIEW
-                            $('.detail-list input[name="tvradio"]').click(function() {
-                                let chosen = $(this).val();
-                                if(chosen != "none") {
-                                    detailObj.addDOM(".theme__option .detail-data", data.detail, null)
-                                } else {
-                                    $(".theme__option .detail-data").empty()
-                                }
-                            })
+                            // $('.bg__colorTable--tv input[name="tvradio"]').on("click",()=>{
+                            //     $(".preview .theme-data .textSlider__left").css("background-color", $('.bg__colorTable--tv input[name="tvradio"]:checked').val());
+                            //     $(".preview .theme-data .textSlider__right").css("background-color", $('.bg__colorTable--tv input[name="tvradio"]:checked').val());
+                            //     $(".preview .theme-data .wave-area .parallax > use").css("fill", $('.bg__colorTable--tv input[name="tvradio"]:checked').val());
+                            // })
                         })
                     })
                 }
@@ -142,104 +140,249 @@ function fetchImages() {
     })
 }
 
-// COLOR TABLE
-function colorTable() {
-    var colorArray = ["#000000","#545454","#737373","#a6a6a6", "#d9d9d9","#ffffff","#ff1717", "#ff5756","#fd66c3","#ca6ce6", "#8c52fe","#5d17eb","#04979e", "#00c2cb","#5ce1e6","#39b5ff", "#5172ff","#004aab","#008036", "#7dd857","#c8e265","#fedd58","#ffbc59","#ff904e"];
-    let i = 0, numberOfColor = colorArray.length;
-    while(i < numberOfColor) {
-        document.querySelector('.bg__colorTable--tv').appendChild(document.createElement("label"));
-        i++;
-    }
-    var label = document.querySelectorAll(".bg__colorTable--tv label");
-    for (i = 0; i < label.length; i++) {
-        label[i].appendChild(document.createElement("input"));
-        label[i].appendChild(document.createElement("div"));
-        label[i].classList.add("radio__label");
-    }
-    var input = document.querySelectorAll(".bg__colorTable--tv .radio__label input");
-    for (i = 0; i < input.length; i++) {
-        input[i].type = "radio";
-        input[i].name = "tvradio";
-        input[i].value = colorArray[i];
-        input[i].classList.add("radio__input");
-    }
-    var div = document.querySelectorAll(".bg__colorTable--tv .radio__label div");
-    for (i = 0; i < div.length; i++){
-        div[i].classList.add("radio__custom");
-        div[i].style.backgroundColor = colorArray[i];
-    }
-}
+function TempleteModifier(container) {
+    this.container = container
+    const thisObject = this
 
-// DETAIL
-function detailCustom() {
-    var detailArray = detailObj.detailName;
-    let i = 0, numberOfColor = detailArray.length;
-    while(i < numberOfColor) {
-        document.querySelector('.detail-list').appendChild(document.createElement("label"));
-        i++;
+    this.colorTable = function() {
+        var colorArray = ["#ffffff", "#000000","#545454","#737373","#a6a6a6", "#d9d9d9", "#ff1717", "#ff5756","#fd66c3","#ca6ce6", "#8c52fe","#5d17eb","#04979e", "#00c2cb","#5ce1e6","#39b5ff", "#5172ff","#004aab","#008036", "#7dd857","#c8e265","#fedd58","#ffbc59","#ff904e"];
+        $(this.container).append(`
+            <div class="colorTable"></div>
+        `)
+        let i = 0, numberOfColor = colorArray.length;
+        while(i < numberOfColor) {
+            document.querySelector('.colorTable').appendChild(document.createElement("label"));
+            i++;
+        }
+        var label = document.querySelectorAll(".colorTable label");
+        for (i = 0; i < label.length; i++) {
+            label[i].appendChild(document.createElement("input"));
+            label[i].appendChild(document.createElement("div"));
+            label[i].classList.add("radio__label");
+        }
+        var input = document.querySelectorAll(".colorTable .radio__label input");
+        for (i = 0; i < input.length; i++) {
+            input[i].type = "radio";
+            input[i].name = "tvradio";
+            input[i].value = colorArray[i];
+            input[i].classList.add("radio__input");
+        }
+        var div = document.querySelectorAll(".colorTable .radio__label div");
+        for (i = 0; i < div.length; i++){
+            div[i].classList.add("radio__custom");
+            div[i].style.backgroundColor = colorArray[i];
+        }
+        return this
     }
-    var label = document.querySelectorAll(".detail-list label");
-    for (i = 0; i < label.length; i++) {
-        label[i].appendChild(document.createElement("input"));
-        label[i].appendChild(document.createElement("div"));
-        label[i].classList.add("radio__label");
-    }
-    var input = document.querySelectorAll(".detail-list .radio__label input");
-    for (i = 0; i < input.length; i++) {
-        input[i].type = "radio";
-        input[i].name = "tvradio";
-        input[i].value = detailArray[i];
-        input[i].classList.add("radio__input");
-    }
-    var div = document.querySelectorAll(".detail-list .radio__label div");
-    for (i = 0; i < div.length; i++){
-        div[i].classList.add("radio__custom");
-        div[i].innerHTML = '<img src="/img/'+detailObj.image[detailArray[i]]+'?v='+version+'" style="width:100%; height: 100%;">'
-    }
-}
 
-// MODIFY TEMPLATE PROCESS
-function modifyTemplateProcess() {
-    const $modifyBtn = $(".template__modify--btn");
-    const $modifyColor = $(".template__modify--color");
-    const $modifyDetail = $(".template__modify--detail");
-    const $modifyBackToOriginal = $(".template__modify--color .back-to-original");
-    const $modifyNextToDetail = $(".template__modify--color .next-to-detail");
-    const $modifyBackToColor = $(".template__modify--detail .back-to-color");
-    const $modifyConfirm = $(".template__modify--detail .template__modify--confirm");
-    $modifyBtn.click(function() {
-        $(this).hide();
-        $modifyColor.css("display", "flex");
-    })
-    $modifyBackToOriginal.click(function() {
-        $modifyColor.hide();
-        $modifyBtn.css("display", "flex");
-    })
-    $modifyNextToDetail.click(function() {
-        $modifyColor.hide();
-        $modifyDetail.css("display", "flex");
-    })
-    $modifyBackToColor.click(function() {
-        $modifyDetail.hide();
-        $modifyColor.css("display", "flex");
-    })
-    $('.bg__colorTable--tv input[name="tvradio"]').click(function(){
-        data.color = $(this).val();
-    })
-    $('.detail-list input[name="tvradio"]').click(function() {
-        data.detail = $(this).val()
-    })
-    $modifyConfirm.click(function() {
-        $.post("/data/theme.php", data, ()=>{
-            $modifyDetail.hide()
-            $modifyBtn.css("display", "flex");
-            $modifyBtn.children().html('<i class="fa-solid fa-circle-check" style="font-size: 25px; color: green; margin-right: 5px;"></i> Modified')
-            setTimeout(()=>{
-                $modifyBtn.children().html('Modify Template')
-            }, 1200)
+    this.gradientTable = function() {
+        var colorArray = [
+            "linear-gradient(160deg, #ffffff 0%, #ffffff 100%)",
+            "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
+            "linear-gradient(225deg, #0093E9 0%, #80D0C7 100%)",
+            "linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%)",
+            "linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%)",
+            "linear-gradient(180deg, #FFFFFF 0%, #6284FF 50%, #FF0000 100%)",
+            "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)",
+            "linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%)",
+            "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
+            "linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%)",
+            "linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%)",
+            "linear-gradient(0deg, #08AEEA 0%, #2AF598 100%)",
+            "linear-gradient(180deg, #52ACFF 25%, #FFE32C 100%)",
+            "linear-gradient(147deg, #FFE53B 0%, #FF2525 74%)",
+            "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)",
+            "linear-gradient(19deg, #3EECAC 0%, #EE74E1 100%)",
+            "linear-gradient(45deg, #FA8BFF 0%, #2BD2FF 52%, #2BFF88 90%)",
+            "linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%)",
+            "linear-gradient(45deg, #FBDA61 0%, #FF5ACD 100%)",
+            "linear-gradient(132deg, #F4D03F 0%, #16A085 100%)",
+            "linear-gradient(180deg, #A9C9FF 0%, #FFBBEC 100%)",
+            "linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%)",
+            "linear-gradient(19deg, #FAACA8 0%, #DDD6F3 100%)",
+            "linear-gradient(90deg, #FAD961 0%, #F76B1C 100%)",
+            "linear-gradient(90deg, #FEE140 0%, #FA709A 100%)"
+        ];
+        $(this.container).append(`
+            <div class="gradientTable"></div>
+        `)
+        let i = 0, numberOfColor = colorArray.length;
+        while(i < numberOfColor) {
+            document.querySelector('.gradientTable').appendChild(document.createElement("label"));
+            i++;
+        }
+        var label = document.querySelectorAll(".gradientTable label");
+        for (i = 0; i < label.length; i++) {
+            label[i].appendChild(document.createElement("input"));
+            label[i].appendChild(document.createElement("div"));
+            label[i].classList.add("radio__label");
+        }
+        var input = document.querySelectorAll(".gradientTable .radio__label input");
+        for (i = 0; i < input.length; i++) {
+            input[i].type = "radio";
+            input[i].name = "tvradio";
+            input[i].value = colorArray[i];
+            input[i].classList.add("radio__input");
+        }
+        var div = document.querySelectorAll(".gradientTable .radio__label div");
+        for (i = 0; i < div.length; i++){
+            div[i].classList.add("radio__custom");
+            div[i].style.backgroundImage = colorArray[i];
+        }
+        return this
+    }
+
+    this.detailCustom = function() {
+        var detailArray = detailObj.detailName;
+        let i = 0, numberOfColor = detailArray.length;
+        $(this.container).append(`
+            <div class="detail-list"></div>
+        `)
+        while(i < numberOfColor) {
+            document.querySelector('.detail-list').appendChild(document.createElement("label"));
+            i++;
+        }
+        var label = document.querySelectorAll(".detail-list label");
+        for (i = 0; i < label.length; i++) {
+            label[i].appendChild(document.createElement("input"));
+            label[i].appendChild(document.createElement("div"));
+            label[i].classList.add("radio__label");
+        }
+        var input = document.querySelectorAll(".detail-list .radio__label input");
+        for (i = 0; i < input.length; i++) {
+            input[i].type = "radio";
+            input[i].name = "tvradio";
+            input[i].value = detailArray[i];
+            input[i].classList.add("radio__input");
+        }
+        var div = document.querySelectorAll(".detail-list .radio__label div");
+        for (i = 0; i < div.length; i++){
+            div[i].classList.add("radio__custom");
+            div[i].innerHTML = '<img src="/img/'+detailObj.image[detailArray[i]]+'?v='+version+'" style="width:100%; height: 100%;">'
+        }
+        return this
+    }
+
+    this.css = `
+        ${this.container} {
+            display: none;
+            flex-direction: column;
+            width: 80%;
+        }
+        ${this.container} .colorTable {
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            border: 2px solid #000;
+            border-radius: 30px;
+            margin: 5px 0px 5px 0px;
+        }
+        ${this.container} .radio__label {
+            cursor: pointer;
+            padding: 1vw;
+            flex-shrink: 0;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+        ${this.container} .radio__input {
+            display: none;
+         }
+         
+         ${this.container} .radio__custom {
+            width: 5vh;
+            height: 5vh;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            position: relative;
+         }
+         ${this.container} .radio__custom::after {
+            content: "";
+            position: absolute;
+            top: -3px;
+            bottom: -3px;
+            left: -3px;
+            right: -3px;
+            display: block;
+            border-radius: 50%;
+            border: solid var(--main-color) 6px;
+            opacity: 0;
+            transition: all .3s ease-in-out;
+         }
+         ${this.container} .radio__input:checked + .radio__custom::after {
+            opacity: 1;
+         }
+         ${this.container} .detail-list {
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            border: 2px solid #000;
+            border-radius: 30px;
+            margin: 5px 0px 5px 0px;
+         }
+         ${this.container} .gradientTable {
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            border: 2px solid #000;
+            border-radius: 30px;
+            margin: 5px 0px 5px 0px;
+         }
+    `
+
+    this.addCSS = function() {
+        const styleElement = document.createElement("style")
+        styleElement.textContent = this.css
+        document.head.appendChild(styleElement)
+        return this
+    }
+
+    this.modifyTemplateProcess = function() {
+        const $btn = $(".template__modify--btn")
+        const $table = $(".template__modify")
+        const $accept = $(".template__modify--accept")
+        $btn.click(function() {
+            $(this).hide();
+            $table.css("display", "flex");
+            $accept.css("display", "flex")
         })
-    })
+        $('.colorTable input[name="tvradio"]').click(function(){
+            $(".slider").css({
+                backgroundImage: "none",
+                backgroundColor: $(this).val()
+            })
+            data.color = $(this).val();
+        })
+        $('.gradientTable input[name="tvradio"]').click(function(){
+            $(".slider").css({
+                backgroundImage: $(this).val()
+            })
+            data.color = $(this).val();
+        })
+        $('.detail-list input[name="tvradio"]').click(function() {
+            let chosen = $(this).val();
+            data.detail = chosen
+            chosen === "none" ? $(".theme__option #detail").empty() : detailObj.addDOM(".theme__option #detail", data.detail, null)
+        })
+        $accept.click(function() {
+            $.post("/data/theme.php", data, ()=>{
+                $table.hide()
+                $accept.hide()
+                $btn.css("display", "flex");
+                $btn.children().html('<i class="fa-solid fa-circle-check" style="font-size: 25px; color: green; margin-right: 5px;"></i> Modified')
+                setTimeout(()=>{
+                    $btn.children().html('Modify Template')
+                }, 1200)
+            })
+        })
+        return this
+    }
 }
+
+function templeteModifier(container) {
+    return new TempleteModifier(container)
+}
+
 function Detail() {
     this.detailName = ['none', 'flowing', 'heart', 'shooting', 'star']
     this.image = {
@@ -1111,4 +1254,4 @@ function BackgroundForUploadImg(container) {
 function backgroundForUploadImg(container) {
     return new BackgroundForUploadImg(container)
 }
-export { initialFetch, fetchImages, colorTable, detailCustom, modifyTemplateProcess, theme, detail, backgroundForUploadImg }
+export { initialFetch, fetchImages, theme, detail, backgroundForUploadImg, templeteModifier }
