@@ -123,84 +123,86 @@ function Transform(ele1, ele2, ele3) {
 
         $resize.each(function(index, element) {
             $(element).on("touchstart", function(e) {
-                e.preventDefault()
-                e.stopPropagation()
-                $(element).addClass("show")
-                $(element).find(".circle").addClass("show")
-                let r = $ele3.width() / $ele3.height()
-                let [posX, posY, scale, angle] = thisObject.exportData()
-                let x0 = $(".preview__imgArea--wrapper").offset().left - window.scrollX
-                let y0 = $(".preview__imgArea--wrapper").offset().top - window.scrollY
-                let [cx, cy] = getCenter($ele3, posX, posY)
-                let rotatedCorner, bottomright = false, bottomleft = false, topright = false
-                let dx
-                if($(element).hasClass("resize-bottomright")) {
-                    rotatedCorner = calculateRotate(posX, posY, cx, cy, angle)
-                    bottomright = true
-                } else if ($(element).hasClass("resize-bottomleft")) {
-                    rotatedCorner = calculateRotate(posX + $ele3.width(), posY, cx, cy, angle)
-                    bottomleft = true
-                } else if ($(element).hasClass("resize-topright")) {
-                    rotatedCorner = calculateRotate(posX, posY + $ele3.height(), cx, cy, angle)
-                    topright = true
-                } else {
-                    rotatedCorner = calculateRotate(posX + $ele3.width(), posY + $ele3.height(), cx, cy, angle)
-                }
-                $(window).on("touchmove", function(e) {
-                    let x = e.touches[0].clientX - x0
-                    let y = e.touches[0].clientY - y0
-                    let newCenter = [
-                        (rotatedCorner[0] + x) / 2,
-                        (rotatedCorner[1] + y) / 2
-                    ]
-
-                    let newCorner = calculateRotate(rotatedCorner[0], rotatedCorner[1], newCenter[0], newCenter[1], -angle)
-                    let newOppositeCorner = calculateRotate(x, y, newCenter[0], newCenter[1], -angle)
-
-                    if(bottomright) {
-                        dx = newOppositeCorner[0] - newCorner[0]
-                        posX = newCorner[0]
-                        posY = newCorner[1]
-                    } else if (bottomleft) {
-                        dx = - (newOppositeCorner[0] - newCorner[0])
-                        posX = newCorner[0] + $ele3.width()
-                        posY = newCorner[1]
-                    } else if (topright) {
-                        dx = newOppositeCorner[0] - newCorner[0]
-                        posX = newCorner[0]
-                        posY = newCorner[1] + $ele3.height()
+                if(e.touches.length === 1) {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    $(element).addClass("show")
+                    $(element).find(".circle").addClass("show")
+                    let r = $ele3.width() / $ele3.height()
+                    let [posX, posY, scale, angle] = thisObject.exportData()
+                    let x0 = $(".preview__imgArea--wrapper").offset().left - window.scrollX
+                    let y0 = $(".preview__imgArea--wrapper").offset().top - window.scrollY
+                    let [cx, cy] = getCenter($ele3, posX, posY)
+                    let rotatedCorner, bottomright = false, bottomleft = false, topright = false
+                    let dx
+                    if($(element).hasClass("resize-bottomright")) {
+                        rotatedCorner = calculateRotate(posX, posY, cx, cy, angle)
+                        bottomright = true
+                    } else if ($(element).hasClass("resize-bottomleft")) {
+                        rotatedCorner = calculateRotate(posX + $ele3.width(), posY, cx, cy, angle)
+                        bottomleft = true
+                    } else if ($(element).hasClass("resize-topright")) {
+                        rotatedCorner = calculateRotate(posX, posY + $ele3.height(), cx, cy, angle)
+                        topright = true
                     } else {
-                        dx = - (newOppositeCorner[0] - newCorner[0])
-                        posX = newCorner[0] + $ele3.width()
-                        posY = newCorner[1] + $ele3.height()
+                        rotatedCorner = calculateRotate(posX + $ele3.width(), posY + $ele3.height(), cx, cy, angle)
                     }
-                    
-                    thisObject.performResize(dx,dx / r)
-
-                    if(bottomright) {
-                        posX = newCorner[0]
-                        posY = newCorner[1]
-                    } else if (bottomleft) {
-                        posX = newCorner[0] - $ele3.width()
-                        posY = newCorner[1]
-                    } else if (topright) {
-                        posX = newCorner[0]
-                        posY = newCorner[1] - $ele3.height()
-                    } else {
-                        posX = newCorner[0] - $ele3.width()
-                        posY = newCorner[1] - $ele3.height()
-                    }
-
-                    thisObject.performTransform(posX, posY, scale, angle)
-                })
+                    $(window).on("touchmove", function(e) {
+                        let x = e.touches[0].clientX - x0
+                        let y = e.touches[0].clientY - y0
+                        let newCenter = [
+                            (rotatedCorner[0] + x) / 2,
+                            (rotatedCorner[1] + y) / 2
+                        ]
     
-                $(window).on("touchend", function() {
-                    $(window).off("touchmove", null)
-                    $(window).off("touchend", null)
-                    thisObject.setValue(posX, posY, scale, angle)
-                    $(element).removeClass("show")
-                    $(element).find(".circle").removeClass("show")
-                })
+                        let newCorner = calculateRotate(rotatedCorner[0], rotatedCorner[1], newCenter[0], newCenter[1], -angle)
+                        let newOppositeCorner = calculateRotate(x, y, newCenter[0], newCenter[1], -angle)
+    
+                        if(bottomright) {
+                            dx = newOppositeCorner[0] - newCorner[0]
+                            posX = newCorner[0]
+                            posY = newCorner[1]
+                        } else if (bottomleft) {
+                            dx = - (newOppositeCorner[0] - newCorner[0])
+                            posX = newCorner[0] + $ele3.width()
+                            posY = newCorner[1]
+                        } else if (topright) {
+                            dx = newOppositeCorner[0] - newCorner[0]
+                            posX = newCorner[0]
+                            posY = newCorner[1] + $ele3.height()
+                        } else {
+                            dx = - (newOppositeCorner[0] - newCorner[0])
+                            posX = newCorner[0] + $ele3.width()
+                            posY = newCorner[1] + $ele3.height()
+                        }
+                        
+                        thisObject.performResize(dx,dx / r)
+    
+                        if(bottomright) {
+                            posX = newCorner[0]
+                            posY = newCorner[1]
+                        } else if (bottomleft) {
+                            posX = newCorner[0] - $ele3.width()
+                            posY = newCorner[1]
+                        } else if (topright) {
+                            posX = newCorner[0]
+                            posY = newCorner[1] - $ele3.height()
+                        } else {
+                            posX = newCorner[0] - $ele3.width()
+                            posY = newCorner[1] - $ele3.height()
+                        }
+    
+                        thisObject.performTransform(posX, posY, scale, angle)
+                    })
+        
+                    $(window).on("touchend", function() {
+                        $(window).off("touchmove", null)
+                        $(window).off("touchend", null)
+                        thisObject.setValue(posX, posY, scale, angle)
+                        $(element).removeClass("show")
+                        $(element).find(".circle").removeClass("show")
+                    })
+                }
             })
         })
         return this

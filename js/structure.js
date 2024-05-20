@@ -5,7 +5,7 @@ function Body() {
         #preview {
            width: 100%;
            height: 100vh;
-           height: 100svh;
+           height: 100dvh;
            overflow: hidden;
            z-index: 99;
            position: absolute;
@@ -23,8 +23,8 @@ function Body() {
             margin-top: 10px;
         }
         #preview .preview__imgArea {
-           width: 65vw;
-           height: 115.56vw;
+           width: 42.1875dvh;
+           height: 75dvh;
            position: relative;
            border: dashed 3px #000;
            background-color: #fff;
@@ -152,21 +152,14 @@ function Body() {
         #preview .preview__signatureArea--delete {
            background-color: rgba(255, 0, 0, 0.6);
            border-radius: 50%;
-           width: 50px;
-           height: 50px;
-           font-size: 30px;
+           width: 40px;
+           height: 40px;
            display: flex;
            justify-content: center;
            align-items: center;
            color: #fff;
-           margin-top: 10px;
            transition: all .3s;
-           display: flex;
-           margin: auto;
-           position: absolute;
-           bottom: 5%;
-           left: calc(50% - 25px);
-           opacity: 5%;
+           margin-top: 5px;
         }
         #preview .preview__signatureArea--delete.glow {
            box-shadow: 0 0 50px 15px #e04848;
@@ -276,9 +269,8 @@ function Body() {
                     <div class="rotate"><i class="fa-solid fa-rotate"></i></div>
                 </div>
             </div>
-            <div class="preview__signatureArea--delete"><i class="fa-solid fa-trash-can"></i></div>
         </div>
-        <div class="background-area"></div>
+        <div class="preview__signatureArea--delete"><i class="fa-solid fa-trash-can"></i></div>
         <div class="preview__btnArea">
             <div class="preview__btn preview__btn--add"><i class="fa-solid fa-signature"></i> Add Signature</div>
             <input type="file" name="" hidden accept="image/*">
@@ -305,42 +297,19 @@ function Body() {
                     <div></div>
                     <h3>TV Customization Preview</h3>
                     <div class="customization__row">
-                        <a href="theme.php" class="button getTheme"><span class="effect"></span>Choose template</a>
+                        <a href="theme.php" class="button getTheme" style="display: none"><span class="effect"></span>Choose template</a>
                         <div class="preview theme__option">
                             <div class="loader"></div>
                             <div class="theme-data"></div>
                             <div id="detail"></div>
                         </div>
                         <div class="customization__row--block">
-                            <div class="template__modify">
-                                <div class="template__modify--btn"><span>Modify Template</span></div>
-                                <div class="template__modify--color">
-                                    <div class="back-to-original"><i class="fa-solid fa-arrow-left"></i></div>
-                                    <div class="bg__colorTable--tv colorTable"></div>
-                                    <div class="next-to-detail"><i class="fa-solid fa-arrow-right"></i></div>
-                                </div>
-                                <div class="template__modify--detail">
-                                    <div class="back-to-color"><i class="fa-solid fa-arrow-left"></i></div>
-                                    <div class="detail-list"></div>
-                                    <div class="template__modify--confirm"><i class="fa-solid fa-check"></i></div>
-                                </div>
-                            </div>
+                            <div class="template__modify--btn"><span>Modify Template</span></div>
+                            <div class="template__modify"></div>
+                            <div class="template__modify--accept"><i class="fa-solid fa-check"></i></div>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="box manual">
-                    <h3>Manual Sliding Mode</h3>
-                    <div class="manual-switch">
-                        <label class="switch">
-                            <input type="checkbox" hidden>
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                    <div class="manual-controller">
-                        <div class="left"><i class="fa-solid fa-arrow-left"></i></div>
-                        <div class="right"><i class="fa-solid fa-arrow-right"></i></div>
-                    </div>
-                </div> -->
                 <div class="box submit_box">
                     <div class="submit_box--tv">
                         <h3>Upload TV Image (9x16)</h3>

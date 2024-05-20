@@ -1,5 +1,5 @@
 import {body} from './structure.js'
-import { initialFetch, fetchImages, colorTable, detailCustom, modifyTemplateProcess, backgroundForUploadImg } from './preview.js'
+import { initialFetch, fetchImages, backgroundForUploadImg, templeteModifier } from './preview.js'
 import { checkSubs, colorConcept, preventDefault, owneraccount, time } from './module.js'
 
 switch(type) {
@@ -16,10 +16,8 @@ switch(type) {
         // TV Customization Preview
         initialFetch()
         fetchImages()
-        colorTable()
-        detailCustom()
-        modifyTemplateProcess()
-        backgroundForUploadImg(".background-area").render().addCSS().preview(".background-preview")
+        templeteModifier(".template__modify").colorTable().gradientTable().detailCustom().addCSS().modifyTemplateProcess()
+        // backgroundForUploadImg(".background-area").render().addCSS().preview(".background-preview")
         // End
         
         checkSubs()
