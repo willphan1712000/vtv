@@ -404,8 +404,20 @@ function Transform(ele1, ele2, ele3) {
         return this
     }
 
-    this.delete = function(cb) {
-        $ele2.on("click", function(e) {
+    this.deleteTouch = function(cb) {
+        $ele2.on("touchstart", function(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            cb()
+            thisObject.setDeleted(true)
+            thisObject.performTransform(0, 0, 1, 0)
+            thisObject.setValue(0, 0, 1, 0)
+        })
+        return this
+    }
+
+    this.deleteDesk = function(cb) {
+        $ele2.on("mousedown", function(e) {
             e.preventDefault()
             e.stopPropagation()
             cb()
