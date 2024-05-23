@@ -65,8 +65,8 @@ function Transform(ele1, ele2, ele3) {
     this.draggableTouch = function() {
         let iPosX, iPosY, posX, posY, dX, dY
         $ele3.on("touchstart", function(e) {
-            // e.preventDefault()
-            // e.stopPropagation()
+            e.preventDefault()
+            e.stopPropagation()
             iPosX = e.touches[0].clientX
             iPosY = e.touches[0].clientY
             let [posX, posY, scale, angle] = thisObject.exportData()
@@ -91,8 +91,8 @@ function Transform(ele1, ele2, ele3) {
     this.draggableDesk = function() {
         $ele3.on("mousedown", function(e) {
             let iPosX, iPosY, dX, dY
-            // e.preventDefault()
-            // e.stopPropagation()
+            e.preventDefault()
+            e.stopPropagation()
             iPosX = e.clientX
             iPosY = e.clientY
             let [posX, posY, scale, angle] = thisObject.exportData()
