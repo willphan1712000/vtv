@@ -22,7 +22,7 @@ include "../maintenance.php";
          </div>
       </div>
    </div>
-   <script src="/js/colorConcept.js?v=<?php echo $v;?>"></script>
-   <script src="/js/subsRenewal.js?v=<?php echo $v;?>" async></script>
+   <script>var type = "subscription"</script>
+   <script type="module" src="/dist/main.js?v=<?=$v;?>" defer></script>
 </body>
 </html>
