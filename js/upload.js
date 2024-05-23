@@ -54,12 +54,18 @@ fileInputTv.onchange = (e) => {
                     left: `calc(${previewFrame.getBoundingClientRect().left}px + 3px)`,
                     top: `calc(${previewFrame.getBoundingClientRect().top}px + 3px)`
                 })
-                obj.previewImg = $$(".preview__imgArea--img", ".preview__imgArea--controller .delete", ".preview__imgArea--controller").draggableTouch().draggableDesk().resizableTouch().rotateTouch().resizableDesk().rotateDesk().delete(function() {
+                obj.previewImg = $$(".preview__imgArea--img", ".preview__imgArea--controller .delete", ".preview__imgArea--controller").draggableTouch().draggableDesk().resizableTouch().rotateTouch().resizableDesk().rotateDesk().deleteTouch(function() {
+                    $(".preview__imgArea--wrapper").hide()
+                    $(".preview__imgArea--controller").hide()
+                }).deleteDesk(function() {
                     $(".preview__imgArea--wrapper").hide()
                     $(".preview__imgArea--controller").hide()
                 })
                 obj.previewImg.setDeleted(false)
-                obj.previewSignature = $$(".preview__signatureArea--img", ".preview__signatureArea--controller .delete", ".preview__signatureArea--controller").draggableTouch().draggableDesk().resizableTouch().resizableDesk().rotateTouch().rotateDesk().delete(function() {
+                obj.previewSignature = $$(".preview__signatureArea--img", ".preview__signatureArea--controller .delete", ".preview__signatureArea--controller").draggableTouch().draggableDesk().resizableTouch().resizableDesk().rotateTouch().rotateDesk().deleteTouch(function() {
+                    $(".preview__signatureArea--controller").hide()
+                    $("#preview .preview__signatureArea--wrapper").hide()
+                }).deleteDesk(function() {
                     $(".preview__signatureArea--controller").hide()
                     $("#preview .preview__signatureArea--wrapper").hide()
                 })
