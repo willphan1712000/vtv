@@ -1,10 +1,10 @@
 import {body} from './structure.js'
-import { initialFetch, fetchImages, backgroundForUploadImg, templeteModifier } from './preview.js'
+import { initialFetch, fetchImages, templeteModifier } from './preview.js'
 import { checkSubs, colorConcept, preventDefault, owneraccount, time } from './module.js'
 
 switch(type) {
     case 'logoutPage':
-        checkSubs()
+        checkSubs(true)
         preventDefault()
         break
     case 'admin':
@@ -16,21 +16,21 @@ switch(type) {
         // TV Customization Preview
         initialFetch()
         fetchImages()
-        templeteModifier(".template__modify").colorTable().gradientTable().detailCustom().addCSS().modifyTemplateProcess()
-        // backgroundForUploadImg(".background-area").render().addCSS().preview(".background-preview")
+        templeteModifier(".template__modify").detailCustom().addCSS().modifyTemplateProcess()
+        templeteModifier(".background-area").colorTable().gradientTable().addCSS().backgroundPreviewProcess(".background-preview")
         // End
         
-        checkSubs()
+        checkSubs(true)
         colorConcept()
         preventDefault()
         break
     case 'loginPage':
-        checkSubs()
+        checkSubs(true)
         colorConcept()
         preventDefault()
         break
     case 'theme':
-        checkSubs()
+        checkSubs(true)
         colorConcept()
         preventDefault()
         break
@@ -41,6 +41,10 @@ switch(type) {
         colorConcept()
         time()
         owneraccount()
+        break
+    case 'subscription':
+        colorConcept()
+        checkSubs(false)
         break
     default:
         console.log("This feature is intented for developers only. Any actions beyond this purpose will be considered hacking activities")

@@ -44,73 +44,73 @@ fileInputTv.onchange = (e) => {
             })
         } else {
             imgProcess.fileHandling(e, function(src) {
-                const dataArr = {
-                    hasSignature: false
-                }
+                const obj = {}
                 $("#preview").css("display", "flex")
                 $("body").css("overflow", "hidden")
                 previewImg.src = src
                 $(".preview__imgArea--controller").css({
-                    width: previewImg.width,
-                    height: previewImg.height
+                    width: `calc(${previewImg.width}px + 0px)`,
+                    height: `calc(${previewImg.height}px + 0px)`,
+                    left: `calc(${previewFrame.getBoundingClientRect().left}px + 3px)`,
+                    top: `calc(${previewFrame.getBoundingClientRect().top}px + 3px)`
                 })
-                // dataArr.previewImg = $$(".preview__imgArea--img", undefined).draggable().distort()
-                dataArr.previewImg = $$(".preview__imgArea--img", undefined, ".preview__imgArea--controller").draggableTouch().draggableDesk().resizableTouch().rotateTouch().resizableDesk().rotateDesk()
-                dataArr.previewSignature = $$("#preview .preview__signatureArea--img", ".preview__signatureArea--delete", ".preview__signatureArea--controller").draggableTouch().draggableDesk().resizableTouch().resizableDesk().rotateTouch().rotateDesk().collide(function() {
-                    // if touched
-                    $(".preview__signatureArea--delete").addClass("glow")
-                    $("#preview .preview__signatureArea").hide('fast')
-                }, function() {
-                    // if not touched
-                    $(".preview__signatureArea--delete").removeClass("glow")
-                    $("#preview .preview__signatureArea").show('fast')
-                }, function() {
-                    // If endtouch and toucheds
-                    $(".preview__signatureArea--delete").removeClass("glow")
+                obj.previewImg = $$(".preview__imgArea--img", ".preview__imgArea--controller .delete", ".preview__imgArea--controller").draggableTouch().draggableDesk().resizableTouch().rotateTouch().resizableDesk().rotateDesk().delete(function() {
+                    $(".preview__imgArea--wrapper").hide()
+                    $(".preview__imgArea--controller").hide()
+                })
+                obj.previewImg.setDeleted(false)
+                obj.previewSignature = $$(".preview__signatureArea--img", ".preview__signatureArea--controller .delete", ".preview__signatureArea--controller").draggableTouch().draggableDesk().resizableTouch().resizableDesk().rotateTouch().rotateDesk().delete(function() {
+                    $(".preview__signatureArea--controller").hide()
+                    $("#preview .preview__signatureArea--wrapper").hide()
                 })
                 signatureInput.onchange = (e) => {
                     const file = e.target.files[0]
                     if(file) {
-                        dataArr.hasSignature = true
                         imgProcess.fileHandling(e, function(src) {
                             previewSignature.src = src
-                            $("#preview .preview__signatureArea").show()
+                            $(".preview__signatureArea--wrapper").show()
+                            $(".preview__signatureArea--controller").show()
                             $(".preview__signatureArea--controller").css({
                                 width: previewSignature.width,
-                                height: previewSignature.height
+                                height: previewSignature.height,
+                                left: `calc(${previewFrame.getBoundingClientRect().left}px + 3px)`,
+                                top: `calc(${previewFrame.getBoundingClientRect().top}px + 3px)`
                             })
+                            obj.previewSignature.setDeleted(false)
                         })
                     }
                 }
                 $("#preview .preview__btn--upload").click(function() {
                     // Get outer image dimensions
-                    let [imgX, imgY, imgScale, imgAngle] = dataArr.previewImg.exportData()
-    
+                    const [imgX, imgY, imgScale, imgAngle] = obj.previewImg.exportData()
+
+                    // Get signature dimensions
+                    const [sX, sY, sScale, sAngle] = obj.previewSignature.exportData()
+
                     // create canvas
                     const ratio = 16/9
                     const width = 1200
                     var [canvas, ctx] = imgProcess.createCanvas(width, ratio*width)
+                    
+                    // Get color or gradient color
+                    const typeOfBackground = background.getAttribute("data-type")
+                    const valueOfBackground = background.getAttribute("data-color")
+                    let [ctxReturned, srcEncoded] = imgProcess.drawColor(typeOfBackground, valueOfBackground, ctx, width, ratio)
 
-                    // draw background iamge on canvas
-                    let [ctxBackground,] = imgProcess.drawImage(background, ctx, 0, 0, 1, 0, canvas, background.getBoundingClientRect().width, background.getBoundingClientRect().height)
-    
-                    // draw outer image on canvas
-                    let [ctxReturned, srcEncoded] = imgProcess.drawImage(previewImg, ctxBackground, imgX, imgY, imgScale, imgAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
-                    // check if signature is added
-                    if(dataArr.hasSignature && !dataArr.previewSignature.isCollided()) {
-                        // Get signature dimensions
-                        let [sX, sY, sScale, sAngle] = dataArr.previewSignature.exportData()
-                        var [,srcEncodedWithSignature] = imgProcess.drawImage(previewSignature, ctxReturned, sX, sY, sScale, sAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
-    
-                        // Upload process starts here
-                        uploadFileTv(srcEncodedWithSignature, 'jpg', 'image', undefined)
-                        $("#preview").hide()
-                        uploadingArea.classList.add("active")
-                    } else {
-                        uploadFileTv(srcEncoded, 'jpg', 'image', undefined)
-                        $("#preview").hide()
-                        uploadingArea.classList.add("active")
+                    // Draw image if it is not deleted
+                    if(!obj.previewImg.isDeleted()) {
+                        // draw outer image on canvas
+                        [ctxReturned, srcEncoded] = imgProcess.drawImage(previewImg, ctxReturned, imgX, imgY, imgScale, imgAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
                     }
+
+                    // Draw signature if it is not deleted
+                    if(!obj.previewSignature.isDeleted()) {
+                        [ctxReturned ,srcEncoded] = imgProcess.drawImage(previewSignature, ctxReturned, sX, sY, sScale, sAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
+                    }
+
+                    uploadFileTv(srcEncoded, 'jpg', 'image', undefined)
+                    $("#preview").hide()
+                    uploadingArea.classList.add("active")
                 })
             })
         }

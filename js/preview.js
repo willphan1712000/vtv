@@ -32,7 +32,7 @@ function initialFetch() {
                         // Attention, because choose template is removed so the default template is 4
                         e[0].theme = 4
                         // ==================
-                        
+
                         $(".theme__option").addClass("theme__option--" + e[0].theme);
                         themeObj.addDOM(".theme__option .theme-data", e[0].theme, function() {
                             const $slider = $(".theme__option .theme-data .slider");
@@ -88,12 +88,6 @@ function initialFetch() {
                                     }
                                 }, 500)
                             });
-                            // TV COLOR PREVIEW
-                            // $('.bg__colorTable--tv input[name="tvradio"]').on("click",()=>{
-                            //     $(".preview .theme-data .textSlider__left").css("background-color", $('.bg__colorTable--tv input[name="tvradio"]:checked').val());
-                            //     $(".preview .theme-data .textSlider__right").css("background-color", $('.bg__colorTable--tv input[name="tvradio"]:checked').val());
-                            //     $(".preview .theme-data .wave-area .parallax > use").css("fill", $('.bg__colorTable--tv input[name="tvradio"]:checked').val());
-                            // })
                         })
                     })
                 }
@@ -143,13 +137,67 @@ function fetchImages() {
 function TempleteModifier(container) {
     this.container = container
     const thisObject = this
+    this.colorArray = ["#ffffff", "#000000","#545454","#737373","#a6a6a6", "#d9d9d9", "#ff1717", "#ff5756","#fd66c3","#ca6ce6", "#8c52fe","#5d17eb","#04979e", "#00c2cb","#5ce1e6","#39b5ff", "#5172ff","#004aab","#008036", "#7dd857","#c8e265","#fedd58","#ffbc59","#ff904e"]
+    this.gradientArray = [
+        "linear-gradient(160deg, #ffffff 0%, #ffffff 100%)",
+        "linear-gradient(223deg, #bae900 0%, #80D0C7 100%)",
+        "linear-gradient(225deg, #0093E9 0%, #80D0C7 100%)",
+        "linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%)",
+        "linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%)",
+        "linear-gradient(181deg, #e020e0 0%, #97D9E1 100%)",
+        "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)",
+        "linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%)",
+        "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
+        "linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%)",
+        "linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%)",
+        "linear-gradient(0deg, #08AEEA 0%, #2AF598 100%)",
+        "linear-gradient(180deg, #52ACFF 25%, #FFE32C 100%)",
+        "linear-gradient(147deg, #FFE53B 0%, #FF2525 74%)",
+        "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)",
+        "linear-gradient(19deg, #3EECAC 0%, #EE74E1 100%)",
+        "linear-gradient(284deg, #8BC6EC 0%, #282fd6 100%)",
+        "linear-gradient(218deg, #ff1ef4 0%, #F7CE68 100%)",
+        "linear-gradient(45deg, #FBDA61 0%, #FF5ACD 100%)",
+        "linear-gradient(132deg, #F4D03F 0%, #16A085 100%)",
+        "linear-gradient(180deg, #A9C9FF 0%, #FFBBEC 100%)",
+        "linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%)",
+        "linear-gradient(19deg, #FAACA8 0%, #DDD6F3 100%)",
+        "linear-gradient(90deg, #FAD961 0%, #F76B1C 100%)",
+        "linear-gradient(90deg, #FEE140 0%, #FA709A 100%)"
+    ]
+    this.gradientBreakdown = {
+        0: [160, "#ffffff", 0, "#ffffff", 100],
+        1: [223, "#bae900", 0, "#80D0C7", 100],
+        2: [225, "#0093E9", 0, "#80D0C7", 100],
+        3: [62, "#8EC5FC", 0, "#E0C3FC", 100],
+        4: [0, "#D9AFD9", 0, "#97D9E1", 100],
+        5: [180, "#e020e0", 0, "#97D9E1", 100],
+        6: [90, "#00DBDE", 0, "#FC00FF", 100],
+        7: [62, "#FBAB7E", 0, "#F7CE68", 100],
+        8: [45, "#85FFBD", 0, "#FFFB7D", 100],
+        9: [135, "#8BC6EC", 0, "#9599E2", 100],
+        10: [0, "#FFDEE9", 0, "#B5FFFC", 100],
+        11: [0, "#08AEEA", 0, "#2AF598", 100],
+        12: [180, "#52ACFF", 25, "#FFE32C", 100],
+        13: [147, "#FFE53B", 0, "#FF2525", 74],
+        14: [19, "#21D4FD", 0, "#B721FF", 100],
+        15: [19, "#3EECAC", 0, "#EE74E1", 100],
+        16: [284, "#8BC6EC", 0, "#282fd6", 90],
+        17: [218, "#ff1ef4", 0, "#F7CE68", 100],
+        18: [45, "#FBDA61", 0, "#FF5ACD", 100],
+        19: [132, "#F4D03F", 0, "#16A085", 100],
+        20: [180, "#A9C9FF", 0, "#FFBBEC", 100],
+        21: [90, "#74EBD5", 0, "#9FACE6", 100],
+        22: [19, "#FAACA8", 0, "#DDD6F3", 100],
+        23: [90, "#FAD961", 0, "#F76B1C", 100],
+        24: [90, "#FEE140", 0, "#FA709A", 100]
+    };
 
     this.colorTable = function() {
-        var colorArray = ["#ffffff", "#000000","#545454","#737373","#a6a6a6", "#d9d9d9", "#ff1717", "#ff5756","#fd66c3","#ca6ce6", "#8c52fe","#5d17eb","#04979e", "#00c2cb","#5ce1e6","#39b5ff", "#5172ff","#004aab","#008036", "#7dd857","#c8e265","#fedd58","#ffbc59","#ff904e"];
         $(this.container).append(`
             <div class="colorTable"></div>
         `)
-        let i = 0, numberOfColor = colorArray.length;
+        let i = 0, numberOfColor = this.colorArray.length;
         while(i < numberOfColor) {
             document.querySelector('.colorTable').appendChild(document.createElement("label"));
             i++;
@@ -164,49 +212,22 @@ function TempleteModifier(container) {
         for (i = 0; i < input.length; i++) {
             input[i].type = "radio";
             input[i].name = "tvradio";
-            input[i].value = colorArray[i];
+            input[i].value = this.colorArray[i];
             input[i].classList.add("radio__input");
         }
         var div = document.querySelectorAll(".colorTable .radio__label div");
         for (i = 0; i < div.length; i++){
             div[i].classList.add("radio__custom");
-            div[i].style.backgroundColor = colorArray[i];
+            div[i].style.backgroundColor = this.colorArray[i];
         }
         return this
     }
 
     this.gradientTable = function() {
-        var colorArray = [
-            "linear-gradient(160deg, #ffffff 0%, #ffffff 100%)",
-            "linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)",
-            "linear-gradient(225deg, #0093E9 0%, #80D0C7 100%)",
-            "linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%)",
-            "linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%)",
-            "linear-gradient(180deg, #FFFFFF 0%, #6284FF 50%, #FF0000 100%)",
-            "linear-gradient(90deg, #00DBDE 0%, #FC00FF 100%)",
-            "linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%)",
-            "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
-            "linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%)",
-            "linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%)",
-            "linear-gradient(0deg, #08AEEA 0%, #2AF598 100%)",
-            "linear-gradient(180deg, #52ACFF 25%, #FFE32C 100%)",
-            "linear-gradient(147deg, #FFE53B 0%, #FF2525 74%)",
-            "linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)",
-            "linear-gradient(19deg, #3EECAC 0%, #EE74E1 100%)",
-            "linear-gradient(45deg, #FA8BFF 0%, #2BD2FF 52%, #2BFF88 90%)",
-            "linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%)",
-            "linear-gradient(45deg, #FBDA61 0%, #FF5ACD 100%)",
-            "linear-gradient(132deg, #F4D03F 0%, #16A085 100%)",
-            "linear-gradient(180deg, #A9C9FF 0%, #FFBBEC 100%)",
-            "linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%)",
-            "linear-gradient(19deg, #FAACA8 0%, #DDD6F3 100%)",
-            "linear-gradient(90deg, #FAD961 0%, #F76B1C 100%)",
-            "linear-gradient(90deg, #FEE140 0%, #FA709A 100%)"
-        ];
         $(this.container).append(`
             <div class="gradientTable"></div>
         `)
-        let i = 0, numberOfColor = colorArray.length;
+        let i = 0, numberOfColor = this.gradientArray.length;
         while(i < numberOfColor) {
             document.querySelector('.gradientTable').appendChild(document.createElement("label"));
             i++;
@@ -221,13 +242,13 @@ function TempleteModifier(container) {
         for (i = 0; i < input.length; i++) {
             input[i].type = "radio";
             input[i].name = "tvradio";
-            input[i].value = colorArray[i];
+            input[i].value = i;
             input[i].classList.add("radio__input");
         }
         var div = document.querySelectorAll(".gradientTable .radio__label div");
         for (i = 0; i < div.length; i++){
             div[i].classList.add("radio__custom");
-            div[i].style.backgroundImage = colorArray[i];
+            div[i].style.backgroundImage = this.gradientArray[i];
         }
         return this
     }
@@ -265,7 +286,6 @@ function TempleteModifier(container) {
 
     this.css = `
         ${this.container} {
-            display: none;
             flex-direction: column;
             width: 80%;
         }
@@ -289,8 +309,8 @@ function TempleteModifier(container) {
          }
          
          ${this.container} .radio__custom {
-            width: 5vh;
-            height: 5vh;
+            width: 4vh;
+            height: 4vh;
             border-radius: 50%;
             cursor: pointer;
             border: none;
@@ -346,19 +366,19 @@ function TempleteModifier(container) {
             $table.css("display", "flex");
             $accept.css("display", "flex")
         })
-        $('.colorTable input[name="tvradio"]').click(function(){
-            $(".slider").css({
-                backgroundImage: "none",
-                backgroundColor: $(this).val()
-            })
-            data.color = $(this).val();
-        })
-        $('.gradientTable input[name="tvradio"]').click(function(){
-            $(".slider").css({
-                backgroundImage: $(this).val()
-            })
-            data.color = $(this).val();
-        })
+        // $('.colorTable input[name="tvradio"]').click(function(){
+        //     $(".slider").css({
+        //         backgroundImage: "none",
+        //         backgroundColor: $(this).val()
+        //     })
+        //     data.color = $(this).val();
+        // })
+        // $('.gradientTable input[name="tvradio"]').click(function(){
+        //     $(".slider").css({
+        //         backgroundImage: $(this).val()
+        //     })
+        //     data.color = $(this).val();
+        // })
         $('.detail-list input[name="tvradio"]').click(function() {
             let chosen = $(this).val();
             data.detail = chosen
@@ -377,7 +397,30 @@ function TempleteModifier(container) {
         })
         return this
     }
-}
+
+    this.backgroundPreviewProcess = function(preview) {
+        $('.colorTable input[name="tvradio"]').click(function(){
+            const color = $(this).val()
+            $(preview).css({
+                backgroundImage: "none",
+                backgroundColor: color
+            })
+            $(preview).attr("data-type", "color")
+            $(preview).attr("data-color", color)
+        })
+        $('.gradientTable input[name="tvradio"]').click(function(){
+            const key = $(this).val()
+            const color = thisObject.gradientArray[key]
+            const breakdown = thisObject.gradientBreakdown[key]
+            $(preview).css({
+                backgroundImage: color
+            })
+            $(preview).attr("data-type", "gradient")
+            $(preview).attr("data-color", breakdown)
+        })
+        return this
+    }
+ }
 
 function templeteModifier(container) {
     return new TempleteModifier(container)
@@ -1170,88 +1213,7 @@ function theme() {
     return new Theme()
 }
 
-function BackgroundForUploadImg(container) {
-    const thisObject = this
-    this.container = container
-    this.eleClass = "img-ele"
-    this.src = [
-        "/img/background/0.jpg",
-        "/img/background/1.jpg",
-        "/img/background/2.jpg",
-        "/img/background/3.jpg",
-        "/img/background/4.jpg",
-        "/img/background/5.jpg",
-        "/img/background/6.jpg",
-    ]
-
-    this.render = function() {
-        for(let i = 0; i < this.src.length; i++) {
-            $(this.container).append(`
-                <div class="${this.eleClass}" data-id="${i}">
-                    <img src=${this.src[i]} alt="">
-                </div>
-            `)
-        }
-        return this
-    }
-
-    this.css = `
-        ${this.container} {
-            overflow-x: auto;
-            overflow-y: hidden;
-            border: 2px solid #000;
-            width: 90%;
-            margin-top: 10px;
-            border-radius: 20px;
-            display: flex;
-            flex-direction: row;
-        }
-
-        ${this.container} img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        ${this.container} .img-ele {
-            aspect-ratio: 1;
-            position: relative;
-            height: 100%;
-            padding: 5px;
-        }
-
-        ${this.container} .show:after {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            border-radius: 50%;
-            border: 3px solid var(--main-color);
-            width: 100%;
-            height: 100%;
-        }
-    `
-
-    this.addCSS = function() {
-        const styleElement = document.createElement("style")
-        styleElement.textContent = this.css
-        document.head.appendChild(styleElement)
-        return this
-    }
-
-    this.preview = function(preview) {
-        $(`.${this.eleClass}`).click(function(e) {
-            const id = e.currentTarget.getAttribute('data-id')
-            $(`.${thisObject.eleClass}`).removeClass("show")
-            $(preview).attr("src", "/img/background/" + id + ".jpg")
-            $(e.currentTarget).addClass("show")
-        })
-        return this
-    }
-}
-
 function backgroundForUploadImg(container) {
     return new BackgroundForUploadImg(container)
 }
-export { initialFetch, fetchImages, theme, detail, backgroundForUploadImg, templeteModifier }
+export { initialFetch, fetchImages, theme, detail, templeteModifier }

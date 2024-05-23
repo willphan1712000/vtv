@@ -3,6 +3,7 @@ function Transform(ele1, ele2, ele3) {
     this.ele2 = ele2 // Collision element
     this.ele3 = ele3 // Controller element
     this.collided = false
+    this.deleted = true
     this.x = 0
     this.y = 0
     this.scale = 1
@@ -53,11 +54,19 @@ function Transform(ele1, ele2, ele3) {
         this.collided = is
     }
 
+    this.isDeleted = function() {
+        return this.deleted
+    }
+
+    this.setDeleted = function(is) {
+        this.deleted = is
+    }
+
     this.draggableTouch = function() {
         let iPosX, iPosY, posX, posY, dX, dY
         $ele3.on("touchstart", function(e) {
-            e.preventDefault()
-            e.stopPropagation()
+            // e.preventDefault()
+            // e.stopPropagation()
             iPosX = e.touches[0].clientX
             iPosY = e.touches[0].clientY
             let [posX, posY, scale, angle] = thisObject.exportData()
@@ -82,8 +91,8 @@ function Transform(ele1, ele2, ele3) {
     this.draggableDesk = function() {
         $ele3.on("mousedown", function(e) {
             let iPosX, iPosY, dX, dY
-            e.preventDefault()
-            e.stopPropagation()
+            // e.preventDefault()
+            // e.stopPropagation()
             iPosX = e.clientX
             iPosY = e.clientY
             let [posX, posY, scale, angle] = thisObject.exportData()
@@ -386,8 +395,6 @@ function Transform(ele1, ele2, ele3) {
                 if(thisObject.isCollided()) {
                     thisObject.performTransform(0, 0, 1, 0)
                     thisObject.setValue(0, 0, 1, 0)
-                    let [x, y, scale, angle] = thisObject.exportData()
-                    thisObject.performTransform($(this), x, y, scale, angle)
                     touchEndCb()
                 }
                 $(this).off("touchmove", null)
@@ -396,6 +403,19 @@ function Transform(ele1, ele2, ele3) {
         })
         return this
     }
+
+    this.delete = function(cb) {
+        $ele2.on("click", function(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            cb()
+            thisObject.setDeleted(true)
+            thisObject.performTransform(0, 0, 1, 0)
+            thisObject.setValue(0, 0, 1, 0)
+        })
+        return this
+    }
+
     this.terminate = function() {
         $ele1.off("touchstart", null)
         $(document).off("touchmove", null)
@@ -431,20 +451,31 @@ function update() {
     }
 }
 
-function checkSubs() {
+function checkSubs(isPage) {
     $.ajax({
         url: "/data/checkSubs.php",
         method: "GET",
-        dataType: "html",
+        dataType: "json",
         success: function(e) {
-            checkSubs(e);
+            if(isPage) {
+                pageToTerminate(e.subs)
+            } else {
+                terminateToPage(e.subs)
+            }
         }
     })
-    function checkSubs(when) {
+    function pageToTerminate(when) {
         const d = new Date();
-        const expiration = new Date(formattingDate(when));
+        const expiration = new Date(formattingDate(when))
         if(d.getTime() >= expiration.getTime()) {
             window.location = "/subsTerminated.php";
+        }
+    }
+    function terminateToPage(when) {
+        const d = new Date();
+        const expiration = new Date(formattingDate(when))
+        if(d.getTime() < expiration.getTime() || when === null) {
+            window.location = "/";
         }
     }
     function formattingDate(date) {
@@ -543,6 +574,31 @@ function ImageProcess() {
         ctx.restore()
         const srcEncoded = ctx.canvas.toDataURL(e).split(",")[1]
         return [ctx, srcEncoded]
+    }
+
+    this.drawColor = function(type, color, ctx, width, ratio) {
+        if(type === "") color = "#ffffff"
+        if(type === "gradient") {
+            const breakdownArr = color.split(",")
+            var [angle, color1, percent1, color2, percent2] = [breakdownArr[0], breakdownArr[1], breakdownArr[2], breakdownArr[3], breakdownArr[4]]
+            const radians = (angle - 180) * Math.PI / 180
+            const x0 = width / 2 + (width / 2) * Math.cos(radians - Math.PI / 2);
+            const y0 = width*ratio / 2 + (width*ratio / 2) * Math.sin(radians - Math.PI / 2);
+            const x1 = width / 2 - (width / 2) * Math.cos(radians - Math.PI / 2);
+            const y1 = width*ratio / 2 - (width*ratio / 2) * Math.sin(radians - Math.PI / 2);
+            const gradient = ctx.createLinearGradient(x0, y0, x1, y1)
+            gradient.addColorStop(percent1/100, color1)
+            gradient.addColorStop(percent2/100, color2)
+            ctx.fillStyle = gradient
+            ctx.fillRect(0, 0, width, width * ratio)
+            const srcEncoded = ctx.canvas.toDataURL().split(",")[1]
+            return [ctx, srcEncoded]
+        } else {
+            ctx.fillStyle = color
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+            const srcEncoded = ctx.canvas.toDataURL().split(",")[1]
+            return [ctx, srcEncoded]
+        }
     }
 }
 
