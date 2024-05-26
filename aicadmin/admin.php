@@ -30,15 +30,15 @@ if(isset($_POST["logo"])) {
 		if ($error === 0) {
 			if ($size < 5000000) {
 				$fileNameNew = uniqid('', true).".".$fileActualExt;
-				$fileLocation = "../img/".$fileNameNew;
+				$fileLocation = "../img/logo/".$fileNameNew;
                 if (move_uploaded_file($tmp_name, $fileLocation)) {
-                    $logo = mysqli_query($conn, "SELECT logo FROM identity");
-                    if (mysqli_fetch_array($logo)['logo'] == NULL) {
+                    $logo = mysqli_query($conn, "SELECT * FROM identity");
+					$prevLogo = mysqli_fetch_assoc($logo)['logo'];
+                    if (mysqli_fetch_assoc($logo)['logo'] == NULL) {
                         mysqli_query($conn, "INSERT INTO identity VALUES('0', '$fileNameNew')");
                     } else {
-                        $prevLogo = mysqli_fetch_array($logo)['logo'];
                         mysqli_query($conn, "UPDATE identity SET logo = '$fileNameNew'");
-                        unlink("../img/".$prevLogo);
+                        unlink("../img/logo/".$prevLogo);
                     }
                     echo '<p class="alert">Logo has been uploaded successfully</p>';
                 } else {
@@ -61,8 +61,8 @@ if(isset($_POST["logo"])) {
 }
 // Set color concept
 if (isset($_POST['concept'])) {
-	if (isset($_POST['colorConcept'])) {
-		$concept = $_POST['colorConcept'];
+	if (isset($_POST['tvradio'])) {
+		$concept = $_POST['tvradio'];
 	} else {
 		$concept = array();
 	}
@@ -119,7 +119,7 @@ while($row = mysqli_fetch_array($queryTime)) {
 				<div class="dash_logo__area">
                     <?php
                         $identityQueryResult = mysqli_fetch_array(mysqli_query($conn, "SELECT *FROM identity"));
-                        echo '<img src="/img/'.$identityQueryResult['logo'].'?v='.$v.'">';
+                        echo '<img src="/img/logo/'.$identityQueryResult['logo'].'?v='.$v.'">';
                     ?>
 				</div>
 				<form action="" method="POST" enctype="multipart/form-data">
@@ -159,36 +159,10 @@ while($row = mysqli_fetch_array($queryTime)) {
 			<div class="box owner_color">
 				<h3>Set Color Concept</h3>
 				<form action="" method="POST">
-					<div class="concept colorTable"></div>
+					<div class="concept color-table" style="width: 100%;"></div>
 					<button class="btn" name="concept" type="submit">Apply</button>
 				</form>
 			</div>
-			<script>
-				var colorArray = ["#000000","#545454","#737373","#a6a6a6", "#d9d9d9","#ffffff","#ff1717", "#ff5756","#fd66c3","#ca6ce6", "#8c52fe","#5d17eb","#04979e", "#00c2cb","#5ce1e6","#39b5ff", "#5172ff","#004aab","#008036", "#7dd857","#c8e265","#fedd58","#ffbc59","#ff904e"];
-				let j = 0; numberOfColor = colorArray.length;
-				while(j < numberOfColor) {
-					document.querySelector('.owner_color .concept').appendChild(document.createElement("label"));
-					j++;
-				}
-				var label = document.querySelectorAll(".concept label");
-				for (j = 0; j < label.length; j++) {
-					label[j].appendChild(document.createElement("input"));
-					label[j].appendChild(document.createElement("div"));
-					label[j].classList.add("radio__label");
-				}
-				var input = document.querySelectorAll(".concept .radio__label input");
-				for (j = 0; j < input.length; j++) {
-					input[j].type = "radio";
-					input[j].name = "colorConcept";
-					input[j].value = colorArray[j];
-					input[j].classList.add("radio__input");
-				}
-				var div = document.querySelectorAll(".concept .radio__label div");
-				for (j = 0; j < div.length; j++){
-					div[j].classList.add("radio__custom");
-					div[j].style.backgroundColor = colorArray[j];
-				}
-			</script>
 			<div class="box time-interval">
 				<h3>Time Interval</h3>
 				<p><i style="color: green;"class="fa-solid fa-circle-check"></i>   Time interval has been set to 

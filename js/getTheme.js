@@ -1,4 +1,4 @@
-import { createCircularLinkedList, checkSubs, preventDefault, createQueue } from "./module.js";
+import { createCircularLinkedList, checkSubs, preventDefault, createQueue, getSecond } from "./module.js";
 import { theme, detail } from './preview.js'
 import '/css/universal.css'
 // Initial load for the entire TV
@@ -61,7 +61,6 @@ $.ajax({
             })
          } else if (iData.theme != Data.theme) {
             iData.theme = Data.theme
-            // themeRefresh(Data)
             // location.reload()
          } else if (iData.bgcolor != Data.bgcolor) {
             iData.bgcolor = Data.bgcolor
@@ -135,6 +134,7 @@ $.ajax({
    
    }
 })
+
 function fetchTheme(array) {
    return new Promise((res, rej) => {
       // ==================
@@ -243,7 +243,7 @@ function addSlideToSlider(node) {
          const canvas = document.querySelector('.slider .--'+filename+' canvas')
          const ctx = canvas.getContext("2d");
          var image = new Image();
-         image.src = "/admin/upload/"+node.data.filename;
+         image.src = "/admin/upload/"+node.data.filename + "?v=" + getSecond();
          image.addEventListener("load",()=>{
             var width = image.width;
             var height = image.height;
@@ -321,7 +321,7 @@ document.addEventListener("visibilitychange", function() {
    location.reload()
 })
 
-// Check subscription
-checkSubs()
-// Prevent default
+// // Check subscription
+checkSubs(true)
+// // Prevent default
 preventDefault()

@@ -1,6 +1,6 @@
 import {body} from './structure.js'
 import { initialFetch, fetchImages, templeteModifier } from './preview.js'
-import { checkSubs, colorConcept, preventDefault, owneraccount, time } from './module.js'
+import { checkSubs, colorConcept, preventDefault, owneraccount, time, switchScreen } from './module.js'
 
 switch(type) {
     case 'logoutPage':
@@ -28,6 +28,7 @@ switch(type) {
         checkSubs(true)
         colorConcept()
         preventDefault()
+        switchScreen()
         break
     case 'theme':
         checkSubs(true)
@@ -41,6 +42,7 @@ switch(type) {
         colorConcept()
         time()
         owneraccount()
+        templeteModifier(".color-table").colorTable().addCSS()
         break
     case 'subscription':
         colorConcept()

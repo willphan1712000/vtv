@@ -37,108 +37,11 @@ function Body() {
             height: 100%;
             object-fit: cover;
         }
-        #preview .preview__imgArea--img {
-           width: 100%;
-           object-fit: contain;
-           position: absolute;
-           top: 0;
-           left: 0;
-           display: block;
-           z-index: 0;
-        }
-        #preview .preview__signatureArea--img {
-            width: 50%;
-            object-fit: contain;
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: block;
-            z-index: 1;
-        }
-        #preview .preview__signatureArea--wrapper {
+        .preview__signatureArea--wrapper {
             display: none;
         }
-        #preview .preview__imgArea--controller {
-            position: absolute;
-            border: solid 3px #6924d5;
-            z-index: 0;
-        }
-        #preview .preview__signatureArea--controller {
-            position: absolute;
-            z-index: 1;
-            border: solid 3px #6924d5;
+        .preview__signatureArea--wrapper--controller--container {
             display: none;
-        }
-        #preview .resize {
-            background-color: #fff;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            transition: all .1s linear;
-        }
-        #preview .resize.show {
-            background-color: #6924d5;
-        }
-        #preview .resize > .circle {
-            background-color: #f0f0f0a8;
-            position: absolute;
-            top: -15px;
-            left: -15px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            z-index: -1;
-            opacity: 0;
-            transition: all .1s linear;
-        }
-        #preview .resize > .circle.show {
-            opacity: 1;
-        }
-        .resize.resize-topleft {
-            position: absolute;
-            top: -10px;
-            left: -10px;
-        }
-        .resize.resize-topright {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-        }
-        .resize.resize-bottomleft {
-            position: absolute;
-            bottom: -10px;
-            left: -10px;
-        }
-        .resize.resize-bottomright {
-            position: absolute;
-            bottom: -10px;
-            right: -10px;
-        }
-        #preview .rotate {
-            position: absolute;
-            bottom: -50px;
-            left: calc(50% - 15px);
-            width: 30px;
-            height: 30px;
-            background-color: #fff;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #preview .delete {
-            position: absolute;
-            top: -50px;
-            left: calc(50% - 15px);
-            width: 30px;
-            height: 30px;
-            background-color: #fff;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         #preview .preview__btnArea {
            display: flex;
@@ -243,24 +146,12 @@ function Body() {
         <h3>Drag, Zoom, or Rotate</h3>
         <div class="preview__imgArea">
             <div class="background-preview" data-type data-color></div>
-            <div class="preview__signatureArea--wrapper"><img class="preview__signatureArea--img" alt="" draggable="false"></div>
-            <div class="preview__imgArea--wrapper"><img class="preview__imgArea--img" alt="" draggable="false"></div>
-        </div>
-        <div class="preview__signatureArea--controller">
-            <div class="resize resize-topleft"><div class="circle"></div></div>
-            <div class="resize resize-topright"><div class="circle"></div></div>
-            <div class="resize resize-bottomleft"><div class="circle"></div></div>
-            <div class="resize resize-bottomright"><div class="circle"></div></div>
-            <div class="rotate"><i class="fa-solid fa-rotate"></i></div>
-            <div class="delete"><i class="fa-solid fa-trash"></i></div>
-        </div>
-        <div class="preview__imgArea--controller">
-            <div class="resize resize-topleft"><div class="circle"></div></div>
-            <div class="resize resize-topright"><div class="circle"></div></div>
-            <div class="resize resize-bottomleft"><div class="circle"></div></div>
-            <div class="resize resize-bottomright"><div class="circle"></div></div>
-            <div class="rotate"><i class="fa-solid fa-rotate"></i></div>
-            <div class="delete"><i class="fa-solid fa-trash"></i></div>
+            <div class="preview__signatureArea--wrapper">
+                <img class="preview__signatureArea--img" alt="" draggable="false">
+            </div>
+            <div class="preview__imgArea--wrapper">
+                <img class="preview__imgArea--img" alt="" draggable="false">
+            </div>
         </div>
         <div class="background-area"></div>
         <div class="preview__btnArea">
