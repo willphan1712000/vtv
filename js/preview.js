@@ -68,11 +68,11 @@ function initialFetch() {
                                     count.push("");
                                 }
                                 if(arrPreview[0] != null && arrPreview[0] != '0') {
-                                    $left.append('<img src="/img/'+arrPreview[0]+'">');
+                                    $left.append('<img src="/img/logo/'+arrPreview[0]+'">');
                                     $left.children().on("load", () => {
                                         count.push("");
                                     })
-                                    $right.append('<img src="/img/'+arrPreview[0]+'">');
+                                    $right.append('<img src="/img/logo/'+arrPreview[0]+'">');
                                     $right.children().on("load", () => {
                                         count.push("");
                                     })
