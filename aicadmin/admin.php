@@ -30,6 +30,9 @@ if(isset($_POST["logo"])) {
 		if ($error === 0) {
 			if ($size < 5000000) {
 				$fileNameNew = uniqid('', true).".".$fileActualExt;
+				if(!is_dir("../img/logo")) {
+					mkdir("../img/logo", 0755, true);
+				}
 				$fileLocation = "../img/logo/".$fileNameNew;
                 if (move_uploaded_file($tmp_name, $fileLocation)) {
                     $logo = mysqli_query($conn, "SELECT * FROM identity");

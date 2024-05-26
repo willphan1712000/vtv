@@ -52,7 +52,7 @@ if (isset($_SESSION['username'])) {
 				<div class="login_design__logo">
 				<?php
 					$identityQueryResult = mysqli_fetch_array(mysqli_query($conn, "SELECT *FROM identity"));
-					echo '<img src="/img/'.$identityQueryResult['logo'].'?v='.$v.'">';
+					echo '<img src="/img/logo/'.$identityQueryResult['logo'].'?v='.$v.'">';
 				?>
 				</div>
 			</div>
