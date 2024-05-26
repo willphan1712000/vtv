@@ -44,7 +44,6 @@ if (isset($_SESSION['aicusername'])) {
 </head>
 <body>
 	<div class="login_parent">
-		<img src="../img/backgroundLogin.jpg?v=<?php echo $v;?>">
 		<div class="login_container">
 			<div class="login_design">
 				<div class="login_design__logo">

@@ -46,52 +46,46 @@ fileInputTv.onchange = (e) => {
             imgProcess.fileHandling(e, function(src) {
                 const obj = {}
                 $("#preview").css("display", "flex")
-                $("body").css("overflow", "hidden")
-                previewImg.src = src
-                $(".preview__imgArea--controller").css({
-                    width: `calc(${previewImg.width}px + 0px)`,
-                    height: `calc(${previewImg.height}px + 0px)`,
-                    left: `calc(${previewFrame.getBoundingClientRect().left}px + 3px)`,
-                    top: `calc(${previewFrame.getBoundingClientRect().top}px + 3px)`
+                $("body").css({
+                    overflow: 'hidden',
+                    touchAction: 'none'
                 })
-                obj.previewImg = $$(".preview__imgArea--img", ".preview__imgArea--controller .delete", ".preview__imgArea--controller").draggableTouch().draggableDesk().resizableTouch().rotateTouch().resizableDesk().rotateDesk().deleteTouch(function() {
+                previewImg.src = src
+                obj.previewImg = $$(".preview__imgArea--wrapper", ".preview__imgArea", undefined).addController().addCSSForController().transform().delete(function() {
                     $(".preview__imgArea--wrapper").hide()
-                    $(".preview__imgArea--controller").hide()
-                }).deleteDesk(function() {
-                    $(".preview__imgArea--wrapper").hide()
-                    $(".preview__imgArea--controller").hide()
+                    $(".preview__imgArea--wrapper--controller--container").hide()
                 })
                 obj.previewImg.setDeleted(false)
-                obj.previewSignature = $$(".preview__signatureArea--img", ".preview__signatureArea--controller .delete", ".preview__signatureArea--controller").draggableTouch().draggableDesk().resizableTouch().resizableDesk().rotateTouch().rotateDesk().deleteTouch(function() {
-                    $(".preview__signatureArea--controller").hide()
-                    $("#preview .preview__signatureArea--wrapper").hide()
-                }).deleteDesk(function() {
-                    $(".preview__signatureArea--controller").hide()
-                    $("#preview .preview__signatureArea--wrapper").hide()
+
+                obj.previewSignature = $$(".preview__signatureArea--wrapper", ".preview__imgArea", undefined).addController().addCSSForController().transform().delete(function() {
+                    $(".preview__signatureArea--wrapper").hide()
+                    $(".preview__signatureArea--wrapper--controller--container").hide()
                 })
+                obj.previewSignature.setDeleted(true)
+
                 signatureInput.onchange = (e) => {
                     const file = e.target.files[0]
                     if(file) {
                         imgProcess.fileHandling(e, function(src) {
                             previewSignature.src = src
-                            $(".preview__signatureArea--wrapper").show()
-                            $(".preview__signatureArea--controller").show()
-                            $(".preview__signatureArea--controller").css({
-                                width: previewSignature.width,
-                                height: previewSignature.height,
-                                left: `calc(${previewFrame.getBoundingClientRect().left}px + 3px)`,
-                                top: `calc(${previewFrame.getBoundingClientRect().top}px + 3px)`
-                            })
+                            let ratio = previewSignature.width / previewSignature.height
                             obj.previewSignature.setDeleted(false)
+                            obj.previewSignature.resize(200, 200 / ratio)
+                            obj.previewSignature.repositionElement(100, 100 / ratio)
+                            obj.previewSignature.rotateBox(0)
+                            obj.previewSignature.setRatio(ratio)
+                            obj.previewSignature.setValue(0, 0, 0, 200, 200 / ratio)
+                            $(".preview__signatureArea--wrapper").show()
+                            $(".preview__signatureArea--wrapper--controller--container").show()
                         })
                     }
                 }
                 $("#preview .preview__btn--upload").click(function() {
                     // Get outer image dimensions
-                    const [imgX, imgY, imgScale, imgAngle] = obj.previewImg.exportData()
+                    const [imgX, imgY, imgAngle] = obj.previewImg.exportData()
 
                     // Get signature dimensions
-                    const [sX, sY, sScale, sAngle] = obj.previewSignature.exportData()
+                    const [sX, sY, sAngle] = obj.previewSignature.exportData()
 
                     // create canvas
                     const ratio = 16/9
@@ -106,12 +100,12 @@ fileInputTv.onchange = (e) => {
                     // Draw image if it is not deleted
                     if(!obj.previewImg.isDeleted()) {
                         // draw outer image on canvas
-                        [ctxReturned, srcEncoded] = imgProcess.drawImage(previewImg, ctxReturned, imgX, imgY, imgScale, imgAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
+                        [ctxReturned, srcEncoded] = imgProcess.drawImage(previewImg, ctxReturned, imgX, imgY, 1, imgAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
                     }
 
                     // Draw signature if it is not deleted
                     if(!obj.previewSignature.isDeleted()) {
-                        [ctxReturned ,srcEncoded] = imgProcess.drawImage(previewSignature, ctxReturned, sX, sY, sScale, sAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
+                        [ctxReturned ,srcEncoded] = imgProcess.drawImage(previewSignature, ctxReturned, sX, sY, 1, sAngle, canvas, $(".preview__imgArea").width(), $(".preview__imgArea").height())
                     }
 
                     uploadFileTv(srcEncoded, 'jpg', 'image', undefined)

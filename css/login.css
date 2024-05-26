@@ -16,7 +16,11 @@
    overflow: hidden;
    width: 100vw;
    height: 100vh;
-   height: 100svh;
+   height: 100dvh;
+   background-image: url("/img/backgroundLogin.jpg");
+   display: flex;
+   justify-content: center;
+   align-items: center;
 }
 .login_parent > img{
    display: block;
@@ -27,9 +31,6 @@
 .login_container {
    display: flex;
    flex-direction: row;
-   top: calc(50vh - 200px);
-   left: calc(50vw - 350px);
-   position: absolute;
    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
    width: 700px;
    height:  400px;
@@ -141,11 +142,8 @@
    .login_container {
       display: flex;
       flex-direction: column;
-      top: calc(50vh - 250px);
-      left: calc(50vw - 165px);
       width: 330px;
       height: 500px;
-      position: absolute;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
       border-radius: 7px;
    }

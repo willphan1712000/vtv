@@ -47,7 +47,6 @@ if (isset($_SESSION['username'])) {
 </head>
 <body>
 	<div class="login_parent">
-		<img src="../img/backgroundLogin.jpg?v=<?php echo $v;?>">
 		<div class="login_container">
 			<div class="login_design">
 				<div class="login_design__logo">
@@ -77,9 +76,6 @@ if (isset($_SESSION['username'])) {
 		</div>
 	</div>
 	<script>
-		if (window.innerWidth > 510) {
-			window.location = "/tv.php";
-		}
 		var type = 'loginPage'
 	</script>
 	<script type="module" src="/js/main.js?v=<?=$v;?>"></script>

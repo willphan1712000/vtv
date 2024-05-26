@@ -1,5 +1,6 @@
 <?php
-    $v = 5.3;
+    $v = 6;
+    // $v = 5.395;
     $sessionDuration = 60*60;
     $title = basename(dirname(__DIR__));
 
