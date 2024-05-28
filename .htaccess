@@ -12,3 +12,23 @@
     ExpiresByType application/javascript "access plus 1 week"
     ExpiresDefault "access plus 1 week"
 </IfModule>
+
+<FilesMatch "\.php$">
+    Header unset ETag
+    Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "Sat, 2 Aug 1980 15:15:00 GMT"
+
+    ExpiresActive On
+    ExpiresDefault "access plus 0 seconds"
+</FilesMatch>
+
+<FilesMatch "\.js$">
+    Header unset ETag
+    Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "Sat, 2 Aug 1980 15:15:00 GMT"
+
+    ExpiresActive On
+    ExpiresDefault "access plus 0 seconds"
+</FilesMatch>
