@@ -1,3 +1,12 @@
+<IfModule LiteSpeed>
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} ^GET|HEAD$
+    RewriteCond %{HTTP_HOST} ^ tv3test.allinclicks.net [NC]
+    RewriteCond %{REQUEST_URI} !login|admin|register|post|cron
+    RewriteCond %{QUERY_STRING} !nocache
+    RewriteRule .* - [E=Cache-Control:max-age=300]
+</IfModule>
+
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript
 </IfModule>
@@ -12,23 +21,3 @@
     ExpiresByType application/javascript "access plus 1 week"
     ExpiresDefault "access plus 1 week"
 </IfModule>
-
-<FilesMatch "\.php$">
-    Header unset ETag
-    Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
-    Header set Pragma "no-cache"
-    Header set Expires "Sat, 2 Aug 1980 15:15:00 GMT"
-
-    ExpiresActive On
-    ExpiresDefault "access plus 0 seconds"
-</FilesMatch>
-
-<FilesMatch "\.js$">
-    Header unset ETag
-    Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
-    Header set Pragma "no-cache"
-    Header set Expires "Sat, 2 Aug 1980 15:15:00 GMT"
-
-    ExpiresActive On
-    ExpiresDefault "access plus 0 seconds"
-</FilesMatch>
