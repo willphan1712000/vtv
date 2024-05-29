@@ -33,3 +33,9 @@ ExpiresDefault "access plus 300 seconds"
     ExpiresDefault "access plus 300 seconds"
     Header set Cache-Control "public, max-age=300"
 </FilesMatch>
+
+# Cache PHP files for 0 seconds
+<FilesMatch "\.(php)$">
+    Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+</FilesMatch>
