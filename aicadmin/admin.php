@@ -30,17 +30,16 @@ if(isset($_POST["logo"])) {
 		if ($error === 0) {
 			if ($size < 5000000) {
 				$fileNameNew = uniqid('', true).".".$fileActualExt;
-				if(!is_dir("../img/logo")) {
-					mkdir("../img/logo", 0755, true);
-				}
 				$fileLocation = "../img/logo/".$fileNameNew;
                 if (move_uploaded_file($tmp_name, $fileLocation)) {
-                    $logo = mysqli_query($conn, "SELECT * FROM identity");
-					$prevLogo = mysqli_fetch_assoc($logo)['logo'];
-                    if (mysqli_fetch_assoc($logo)['logo'] == NULL) {
+                    $identity = mysqli_query($conn, "SELECT * FROM identity");
+					$arr = mysqli_fetch_assoc($identity);
+					$prevLogo = $arr['logo'];
+					$color = $arr['color'];
+                    if ($prevLogo === NULL && $color === NULL) {
                         mysqli_query($conn, "INSERT INTO identity VALUES('0', '$fileNameNew')");
                     } else {
-                        mysqli_query($conn, "UPDATE identity SET logo = '$fileNameNew'");
+                        mysqli_query($conn, "UPDATE identity SET logo = '$fileNameNew' WHERE color = '$color'");
                         unlink("../img/logo/".$prevLogo);
                     }
                     echo '<p class="alert">Logo has been uploaded successfully</p>';
@@ -72,11 +71,16 @@ if (isset($_POST['concept'])) {
 	if (empty($concept)) {
 		echo '<p class="alert">Please select a color</p>';
 	} else {
-		$color = mysqli_query($conn, "SELECT color FROM identity ");
-		if (mysqli_fetch_array($color)['color'] == NULL) {
+		$identity = mysqli_query($conn, "SELECT * FROM identity");
+		$arr = mysqli_fetch_assoc($identity);
+		$prevLogo = $arr['logo'];
+		$color = $arr['color'];
+		if ($prevLogo === NULL && $color === NULL) {
 			mysqli_query($conn, "INSERT INTO identity VALUES ('$concept', '0')");
+			echo '<p class="alert">Color has been set successfully</p>';
 		} else {
-			mysqli_query($conn, "UPDATE identity SET color = '$concept'");
+			mysqli_query($conn, "UPDATE identity SET color = '$concept' WHERE logo = '$prevLogo'");
+			echo '<p class="alert">Color has been set successfully</p>';
 		}
 	}
 }

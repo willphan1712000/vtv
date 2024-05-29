@@ -1,23 +1,35 @@
-<IfModule LiteSpeed>
-    RewriteEngine On
-    RewriteCond %{REQUEST_METHOD} ^GET|HEAD$
-    RewriteCond %{HTTP_HOST} ^ tv3test.allinclicks.net [NC]
-    RewriteCond %{REQUEST_URI} !login|admin|register|post|cron
-    RewriteCond %{QUERY_STRING} !nocache
-    RewriteRule .* - [E=Cache-Control:max-age=300]
-</IfModule>
+# Enable the use of Expires and Headers module
+ExpiresActive On
 
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript
-</IfModule>
+# Set default expiration to 300 seconds (5 minutes) from now
+ExpiresDefault "access plus 300 seconds"
 
-<IfModule mod_expires.c>
-    ExpiresActive On
-    ExpiresByType image/gif "access plus 1 month"
-    ExpiresByType image/jpeg "access plus 1 month"
-    ExpiresByType image/png "access plus 1 month"
-    ExpiresByType text/css "access plus 1 week"
-    ExpiresByType text/javascript "access plus 1 week"
-    ExpiresByType application/javascript "access plus 1 week"
-    ExpiresDefault A300
-</IfModule>
+# Cache images for 300 seconds
+<FilesMatch "\.(jpg|jpeg|png|gif|ico)$">
+    ExpiresDefault "access plus 300 seconds"
+    Header set Cache-Control "public, max-age=300"
+</FilesMatch>
+
+# Cache CSS and JavaScript files for 300 seconds
+<FilesMatch "\.(css|js)$">
+    ExpiresDefault "access plus 300 seconds"
+    Header set Cache-Control "public, max-age=300"
+</FilesMatch>
+
+# Cache HTML files for 300 seconds
+<FilesMatch "\.(html|htm)$">
+    ExpiresDefault "access plus 300 seconds"
+    Header set Cache-Control "public, max-age=300"
+</FilesMatch>
+
+# Cache JSON files for 300 seconds
+<FilesMatch "\.(json)$">
+    ExpiresDefault "access plus 300 seconds"
+    Header set Cache-Control "public, max-age=300"
+</FilesMatch>
+
+# Cache XML files for 300 seconds
+<FilesMatch "\.(xml)$">
+    ExpiresDefault "access plus 300 seconds"
+    Header set Cache-Control "public, max-age=300"
+</FilesMatch>
