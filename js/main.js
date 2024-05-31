@@ -21,6 +21,7 @@ switch(type) {
         // End
         
         checkSubs(true)
+        switchScreen()
         colorConcept()
         preventDefault()
         break
