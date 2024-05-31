@@ -11,7 +11,9 @@ if(!isset($_POST['theme']) && !(isset($_POST['color']) && isset($_POST['detail']
 elseif ((isset($_POST['color']) && isset($_POST['detail'])) && !isset($_POST['theme'])) {
     $color = $_POST['color'];
     $detail = $_POST['detail'];
-    mysqli_query($conn, "UPDATE theme SET detail = '$detail', bgcolor = '$color'");
+    mysqli_query($conn, "DELETE FROM theme");
+    mysqli_query($conn, "INSERT INTO theme VALUES('-1', '$detail', '$color')");
+    // mysqli_query($conn, "UPDATE theme SET detail = '$detail', bgcolor = '$color'");
 }
 elseif (isset($_POST['theme']) && !(isset($_POST['color']) && isset($_POST['detail']))) {
     $theme = $_POST['theme'];

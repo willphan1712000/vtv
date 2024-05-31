@@ -9,7 +9,7 @@ function initialFetch() {
         method: "GET",
         dataType: "json",
         success: function(e) {
-            if(e.length == 0) {
+            if(e.length == -1) {
                 $(".theme__option").append('<p><i class="fa-solid fa-circle-exclamation"></i> No Template</p>');
                 $(".preview").css("display", "flex");
                 $(".theme__option .loader").hide();
@@ -17,6 +17,17 @@ function initialFetch() {
                 // Function fetches Theme, Img, Logo, Bgcolor, Detail
                 function img() {
                     return new Promise((res, rej) => {
+                        // ==================
+                        // Attention, because choose template is removed so the default template is 4
+                        if(e.length == 0) {
+                            e = [{
+                                theme: 4,
+                                bgcolor: undefined,
+                                detail: undefined
+                            }]
+                        }
+                        e[0].theme = 4
+                        // ==================
                         if(e[0].bgcolor === 'null' || e[0].bgcolor === undefined) {
                             data.color = '#fff'
                         } else {
@@ -27,11 +38,6 @@ function initialFetch() {
                         } else {
                             data.detail = e[0].detail
                         }
-
-                        // ==================
-                        // Attention, because choose template is removed so the default template is 4
-                        e[0].theme = 4
-                        // ==================
 
                         $(".theme__option").addClass("theme__option--" + e[0].theme);
                         themeObj.addDOM(".theme__option .theme-data", e[0].theme, function() {
@@ -64,7 +70,7 @@ function initialFetch() {
                                         })
                                     }
                                 } else {
-                                    $slider.append('<p><i class="fa-solid fa-circle-exclamation"></i> No image/video</p>')
+                                    $slider.append('<p><i class="fa-solid fa-circle-exclamation"></i> No files</p>')
                                     count.push("");
                                 }
                                 if(arrPreview[0] != null && arrPreview[0] != '0') {
