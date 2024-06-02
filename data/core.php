@@ -44,7 +44,7 @@ class SystemConfig {
     }
 
     public static function getVersion() {
-        return 6.2;
+        return 6.21;
     }
 
     public static function getCurrentDir() {

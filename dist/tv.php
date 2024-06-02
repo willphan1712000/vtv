@@ -10,7 +10,7 @@ $g = SystemConfig::globalVariables();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?=$g['title'];?></title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script defer src="/dist/tvc6ae0f5154ad7ffdccb7.js"></script></head>
+<script defer src="/dist/tv6eaef5954db4706c0773.js"></script></head>
 <body style="overflow: hidden;">
     <div class="loading" style="position: absolute; width: 100vw; height: 100vh; display: flex;justify-content: center; align-items: center; transition: all .3s"><p>Loading</p></div>
     <div class="warning" style="position: absolute; width: 100vw; height: 100vh; display: none;justify-content: center; align-items: center; transition: all .3s; flex-direction: column"><p>Please update time and theme before proceeding this</p><div class="refresh" style="margin-top: 20px; background-color: #f0f0f0; border-radius: 10px; padding: 15px; cursor: pointer;">Refresh</div></div>
