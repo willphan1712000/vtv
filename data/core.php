@@ -21,7 +21,7 @@ class Router {
 
     private function abort() {
         http_response_code(404);
-        require 'controllers/404.php';
+        require 'dist/404.php';
         die();
     }
 
@@ -33,14 +33,18 @@ class Router {
 class SystemConfig {
     public static function globalVariables() {
         return [
-            'v' => 6.19,
-            'license' => '© '.date("Y").' Allinclicks. All rights reserved.',
+            'v' => self::getVersion(),
+            'license' => '© '.date("Y").' Allinclicks. All rights reserved. Version: '.self::getVersion(),
             'sessionDuration' => 60 * 10,
             'multiImgMax' => 30,
             'multiVideoMax' => 2,
             'title' => self::getCurrentDir(),
             'maxVideoDuration' => 60,
         ];
+    }
+
+    public static function getVersion() {
+        return 6.2;
     }
 
     public static function getCurrentDir() {
