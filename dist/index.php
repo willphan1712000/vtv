@@ -34,7 +34,7 @@ if (isset($_SESSION['username'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en"><head><script defer src="/dist/main364c2dce59353ab9ad70.js"></script><script defer src="/dist/login911b6b306c5b30f04197.js"></script><script defer src="/dist/universal900bc0c532bedfdccd93.js"></script></head>
+<html lang="en"><head><script defer src="/dist/main1afe1dd4fd3bde2b3d71.js"></script><script defer src="/dist/login911b6b306c5b30f04197.js"></script><script defer src="/dist/universal900bc0c532bedfdccd93.js"></script></head>
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">

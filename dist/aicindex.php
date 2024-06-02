@@ -40,7 +40,7 @@ if (isset($_SESSION['aicusername'])) {
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Log in</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script defer src="/dist/main364c2dce59353ab9ad70.js"></script><script defer src="/dist/login911b6b306c5b30f04197.js"></script><script defer src="/dist/universal900bc0c532bedfdccd93.js"></script></head>
+<script defer src="/dist/main1afe1dd4fd3bde2b3d71.js"></script><script defer src="/dist/login911b6b306c5b30f04197.js"></script><script defer src="/dist/universal900bc0c532bedfdccd93.js"></script></head>
 <body>
 	<div class="login_parent">
 		<div class="login_container">
