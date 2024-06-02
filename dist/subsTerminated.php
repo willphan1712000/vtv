@@ -8,9 +8,8 @@ include "../maintenance.php";
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Subscription expired</title>
-   <link rel="stylesheet" type="text/css" href="/css/termination.css?v=<?php echo $v;?>">
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-</head>
+<script defer src="/dist/main364c2dce59353ab9ad70.js"></script><script defer src="/dist/termination63c3f745a6ad7743f91d.js"></script></head>
 <body>
    <div class="parent">
       <div class="background">
@@ -23,6 +22,5 @@ include "../maintenance.php";
       </div>
    </div>
    <script>var type = "subscription"</script>
-   <script type="module" src="/dist/main.js?v=<?=$v;?>" defer></script>
 </body>
 </html>

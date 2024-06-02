@@ -1,6 +1,7 @@
 <?php
 // of = obtained features
-include "connection.php";
+include "core.php";
+$conn = Database::connection();
 class Feature {
     public $time;
     public $theme;

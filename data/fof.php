@@ -2,7 +2,8 @@
 // fof = frequently obtained features
 date_default_timezone_set("America/New_York");
 header("Content-Type: text/event-stream");
-include "connection.php";
+include "core.php";
+$conn = Database::connection();
 class Feature {
     public $time;
     public $theme;

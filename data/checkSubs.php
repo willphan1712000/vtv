@@ -1,5 +1,6 @@
 <?php
-include "connection.php";
+include "core.php";
+$conn = Database::connection();
 $obj = new stdClass();
 $subsQuery = mysqli_query($conn, "SELECT *FROM subscription");
 $obj->subs = mysqli_fetch_assoc($subsQuery)['date'];

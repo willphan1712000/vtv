@@ -1,16 +1,8 @@
 <?php
-    $v = 6.18;
-    // $v = 5.395;
+    // $v = 6.18;
+    $v = 5.397;
     $sessionDuration = 60*60;
     $title = basename(dirname(__DIR__));
-
-    // Database Information
-    $servername = "localhost:3306";
-    $username = "allincli_ssadmin";
-    $password= "123456";
-    // $username = "root";
-    // $password= "";
-    $dbName = "allincli_vtv_".str_replace('.','_',basename(dirname(__DIR__)));
 
     $multiImgMax = 30;
     $multiVideoMax = 2;

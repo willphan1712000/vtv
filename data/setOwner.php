@@ -1,5 +1,6 @@
 <?php
-    include "connection.php";
+    include "core.php";
+    $conn = Database::connection();
     if (isset($_POST['username']) && isset($_POST['password'])) {
         $username = $_POST['username'];
         $password = $_POST['password'];

@@ -1,5 +1,6 @@
 <?php
-include "connection.php";
+include "core.php";
+$conn = Database::connection();
 if(!isset($_POST['theme']) && !(isset($_POST['color']) && isset($_POST['detail']))) {
     $themeQuery = mysqli_query($conn, "SELECT *FROM theme");
     $data = [];

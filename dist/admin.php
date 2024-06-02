@@ -1,13 +1,14 @@
 <?php
 // Upload image name to database and image file to a certain folder
 // Include all necessary files
-include "../data/connection.php";
+$conn = Database::connection();
+$g = SystemConfig::globalVariables();
 // include "../data/numoftheme.php";
 // Page Session
 SESSION_START();
 if(isset($_SESSION['username'])) {
-	if (time() - $_SESSION['last_time_admin'] > $sessionDuration) {
-		header("Location: sessionExpired.php");
+	if (time() - $_SESSION['last_time_admin'] > $g['sessionDuration']) {
+		header("Location: /expire");
 		unset($_SESSION['username']);
 	} else {
 		$_SESSION['last_time_admin'] = time();
@@ -19,7 +20,7 @@ else {
 
 // Logout
 if(isset($_POST['logOut'])) {
-	header("Location: logOutPage.php");
+	header("Location: /logout");
 	unset($_SESSION['username']);
 }
 $countQuery = mysqli_query($conn, "SELECT *FROM tvfile");
@@ -37,24 +38,19 @@ while($row = mysqli_fetch_array($countQuery)) {
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
    	<meta http-equiv="Pragma" content="no-cache" />
    	<meta http-equiv="Expires" content="-1"/>
-	   <link rel="stylesheet" type="text/css" href="../css/universal.css?v=<?= $v;?>">
-	<link rel="stylesheet" type="text/css" href="../css/admin.css?v=<?= $v;?>">
-	<link rel="stylesheet" type="text/css" href="../css/theme.css?v=<?= $v;?>">
-	<link rel="stylesheet" type="text/css" href="../css/detail.css?v=<?= $v;?>">
 	<title>Admin</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://kit.fontawesome.com/960d33c629.js" crossorigin="anonymous"></script>
-</head>
+<script defer src="/dist/main364c2dce59353ab9ad70.js"></script><script defer src="/dist/upload3637c63a5eaeaa62f0cb.js"></script><script defer src="/dist/admin56c3294864b92397c665.js"></script><script defer src="/dist/detail666779ed56d6ee876e88.js"></script><script defer src="/dist/themee1bd8361b29db98744b1.js"></script><script defer src="/dist/universal900bc0c532bedfdccd93.js"></script></head>
 <body>
 	<script>
-		var multiImgMax = <?= $multiImgMax;?>, currentImg = <?= $count;?>;
-		var id = "<?= $title;?>";
-		var version = "<?= $v;?>";
-		var copyright  = "<?= $copyright;?>"
-		var maxVideoDuration = "<?= $maxVideoDuration;?>"
-		var type = "admin"
+		var multiImgMax = <?= $g['multiImgMax'];?>;
+		var currentImg = <?= $count;?>;
+		var id = "<?= $g['title'];?>";
+		var version = "<?= $g['v'];?>";
+		var copyright  = "<?= $g['license'];?>";
+		var maxVideoDuration = "<?= $g['maxVideoDuration'];?>";
+		var type = "admin";
 	</script>
-	<script type="module" src="/dist/main.js?v=<?=$v;?>" defer></script>
-    <script type="module" src="/js/upload.js?v=<?=$v;?>" defer></script>
 </body>
 </html>
