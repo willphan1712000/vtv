@@ -1,5 +1,6 @@
 <?php
-include "../maintenance.php";
+$conn = Database::connection();
+$g = SystemConfig::globalVariables();
 ?>
 <!DOCTYPE html>
 <html lang="en">
