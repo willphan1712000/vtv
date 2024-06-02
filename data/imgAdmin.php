@@ -1,5 +1,6 @@
 <?php
-    include "connection.php";
+    include "core.php";
+    $conn = Database::connection();
     if(isset($_POST['req'])) {
         $req = $_POST['req'];
         $query = mysqli_query($conn, "SELECT *FROM tvfile ORDER BY rand()");

@@ -1,5 +1,6 @@
 <?php
-include "connection.php";
+include "core.php";
+$conn = Database::connection();
 if(isset($_POST['manual'])) {
     $manual = $_POST['manual'];
     if($manual === "true" || $manual === "false") {

@@ -6,3 +6,8 @@ package.json
 webpack.config.js
 img/logo/*
 !img/logo/.gitkeep
+templates/*
+js/*
+css/*
+upload/*
+!upload/.gitkeep

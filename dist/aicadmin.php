@@ -1,19 +1,20 @@
 <?php
 // Upload image name to database and image file to a certain folder
 // Include all necessary files
-include "../data/connection.php";
+$conn = Database::connection();
+$g = SystemConfig::globalVariables();
 // Page Session
 SESSION_START();
 if(isset($_SESSION['aicusername'])) {
-	if (time() - $_SESSION['last_time_aicadmin'] > $sessionDuration) {
-		header("Location: ../admin/sessionExpired.php");
+	if (time() - $_SESSION['last_time_aicadmin'] > $g['sessionDuration']) {
+		header("Location: /expire");
 		unset($_SESSION['aicusername']);
 	} else {
 		$_SESSION['last_time_aicadmin'] = time();
 	}
 }
 else {
-	header("Location: ./");
+	header("Location: /aicadmin");
 }
 // Logo upload
 if(isset($_POST["logo"])) {
@@ -26,11 +27,12 @@ if(isset($_POST["logo"])) {
 	$fileActualExt = strtolower(end($fileExt));
 
 	$ExtAllowed = array('jpg', 'jpeg', 'png', 'pdf');
+	$msgLogo = "";
 	if (in_array($fileActualExt, $ExtAllowed)) {
 		if ($error === 0) {
 			if ($size < 5000000) {
 				$fileNameNew = uniqid('', true).".".$fileActualExt;
-				$fileLocation = "../img/logo/".$fileNameNew;
+				$fileLocation = "./img/logo/".$fileNameNew;
                 if (move_uploaded_file($tmp_name, $fileLocation)) {
                     $identity = mysqli_query($conn, "SELECT * FROM identity");
 					$arr = mysqli_fetch_assoc($identity);
@@ -40,36 +42,37 @@ if(isset($_POST["logo"])) {
                         mysqli_query($conn, "INSERT INTO identity VALUES('0', '$fileNameNew')");
                     } else {
                         mysqli_query($conn, "UPDATE identity SET logo = '$fileNameNew' WHERE color = '$color'");
-                        unlink("../img/logo/".$prevLogo);
+                        unlink("./img/logo/".$prevLogo);
                     }
-                    echo '<p class="alert">Logo has been uploaded successfully</p>';
+					$msgLogo = "Logo has been uploaded successfully";
                 } else {
-                    echo '<p class="alert">There was a problem uploading the file</p>';
+					$msgLogo = "There was a problem uploading the file";
                 }
 				
 				
 			}
 			else {
-				echo '<p class="alert">The image should be less than 5MB</p>';
+				$msgLogo = "The image should be less than 5MB";
 			}
 		}
 		else {
-			echo '<p class="alert">there was an error</p>';
+			$msgLogo = "There was an error";
 		}
 	}
 	else {
-		echo '<p class="alert">The extension of the image is not allowed</p>';
+		$msgLogo = "The extension of the image is not allowed";
 	}
 }
 // Set color concept
 if (isset($_POST['concept'])) {
+	$msgColor = "";
 	if (isset($_POST['tvradio'])) {
 		$concept = $_POST['tvradio'];
 	} else {
 		$concept = array();
 	}
 	if (empty($concept)) {
-		echo '<p class="alert">Please select a color</p>';
+		$msgColor = "Please select a color";
 	} else {
 		$identity = mysqli_query($conn, "SELECT * FROM identity");
 		$arr = mysqli_fetch_assoc($identity);
@@ -77,16 +80,16 @@ if (isset($_POST['concept'])) {
 		$color = $arr['color'];
 		if ($prevLogo === NULL && $color === NULL) {
 			mysqli_query($conn, "INSERT INTO identity VALUES ('$concept', '0')");
-			echo '<p class="alert">Color has been set successfully</p>';
+			$msgColor = "Color has been set successfully";
 		} else {
 			mysqli_query($conn, "UPDATE identity SET color = '$concept' WHERE logo = '$prevLogo'");
-			echo '<p class="alert">Color has been set successfully</p>';
+			$msgColor = "Color has been set successfully";
 		}
 	}
 }
 // Logout
 if(isset($_POST['logOut'])) {
-	header("Location: ../admin/logOutPage.php");
+	header("Location: /logout");
 	unset($_SESSION['aicusername']);
 }
 // Fetch time
@@ -104,13 +107,10 @@ while($row = mysqli_fetch_array($queryTime)) {
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
    	<meta http-equiv="Pragma" content="no-cache" />
    	<meta http-equiv="Expires" content="-1"/>
-	<link rel="stylesheet" type="text/css" href="../css/admin.css?v=<?=$v;?>">
-	<link rel="stylesheet" type="text/css" href="../css/universal.css?v=<?=$v;?>">
-	<link rel="stylesheet" type="text/css" href="../css/aicstyle.css?v=<?=$v;?>">
 	<title>Admin</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/960d33c629.js" crossorigin="anonymous"></script>
-</head>
+<script defer src="/dist/main364c2dce59353ab9ad70.js"></script><script defer src="/dist/admin56c3294864b92397c665.js"></script><script defer src="/dist/aicstyle63523c906903802b6529.js"></script><script defer src="/dist/universal900bc0c532bedfdccd93.js"></script></head>
 <body>
 	<!-- ========== Uploading Progress ========== -->
 	<div id = "uploadingArea">
@@ -126,7 +126,7 @@ while($row = mysqli_fetch_array($queryTime)) {
 				<div class="dash_logo__area">
                     <?php
                         $identityQueryResult = mysqli_fetch_array(mysqli_query($conn, "SELECT *FROM identity"));
-                        echo '<img src="/img/logo/'.$identityQueryResult['logo'].'?v='.$v.'">';
+                        echo '<img src="/img/logo/'.$identityQueryResult['logo'].'?v='.$g['v'].'">';
                     ?>
 				</div>
 				<form action="" method="POST" enctype="multipart/form-data">
@@ -158,6 +158,7 @@ while($row = mysqli_fetch_array($queryTime)) {
 			<div class="box owner_logo">
 				<div></div>
 				<h3>Upload Logo Image (Should be transparent)</h3>
+				<p style="color: green; margin-bottom: 15px;"><?=$msgLogo;?></p>
 				<form action="" method="POST" enctype="multipart/form-data">
 					<input type="file" name="file" accept="image/* ">
 					<button class="btn" type="submit" name="logo">Upload</button>
@@ -165,6 +166,7 @@ while($row = mysqli_fetch_array($queryTime)) {
 			</div>
 			<div class="box owner_color">
 				<h3>Set Color Concept</h3>
+				<p style="color: green; margin-bottom: 15px;"><?=$msgColor;?></p>
 				<form action="" method="POST">
 					<div class="concept color-table" style="width: 100%;"></div>
 					<button class="btn" name="concept" type="submit">Apply</button>
@@ -188,12 +190,11 @@ while($row = mysqli_fetch_array($queryTime)) {
 		</div>
 	</div>
 	<div id="copyright">
-		<p>© <?=$year?> All in Click, LLC. All rights reserved.</p>
+		<p><?=$g['license'];?></p>
 	</div>
 	<script>
-		var id = "<?= $title;?>"
+		var id = "<?= $g['title'];?>"
 		var type = "aicadmin"
 	</script>
-	<script type="module" src="/js/main.js?v=<?=$v;?>"></script>
 </body>
 </html>

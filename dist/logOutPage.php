@@ -4,10 +4,9 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" type="text/css" href="/css/termination.css?v=<?php echo $v;?>">
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
    <title>Logged out</title>
-</head>
+<script defer src="/dist/main364c2dce59353ab9ad70.js"></script><script defer src="/dist/termination63c3f745a6ad7743f91d.js"></script></head>
 <body>
    <div class="parent">
       <img src="../img/backgroundLogin.jpg?v=<?php echo $v;?>">
@@ -29,6 +28,5 @@
    <script>
       var type = "logoutPage"
    </script>
-   <script type="module" src="/js/main.js"></script>
 </body>
 </html>
