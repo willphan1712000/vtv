@@ -10,7 +10,7 @@ $g = SystemConfig::globalVariables();
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Subscription expired</title>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script defer src="/dist/main1afe1dd4fd3bde2b3d71.js"></script><script defer src="/dist/termination63c3f745a6ad7743f91d.js"></script></head>
+<script defer src="/dist/mainafa4b313f43ffd7fa3c1.js"></script><script defer src="/dist/termination63c3f745a6ad7743f91d.js"></script></head>
 <body>
    <div class="parent">
       <div class="background">

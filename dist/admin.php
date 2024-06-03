@@ -41,7 +41,7 @@ while($row = mysqli_fetch_array($countQuery)) {
 	<title>Admin</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://kit.fontawesome.com/960d33c629.js" crossorigin="anonymous"></script>
-<script defer src="/dist/main1afe1dd4fd3bde2b3d71.js"></script><script defer src="/dist/upload8f79dd3b420ece3c0d1c.js"></script><script defer src="/dist/admin56c3294864b92397c665.js"></script><script defer src="/dist/detail666779ed56d6ee876e88.js"></script><script defer src="/dist/themee1bd8361b29db98744b1.js"></script><script defer src="/dist/universal900bc0c532bedfdccd93.js"></script></head>
+<script defer src="/dist/mainafa4b313f43ffd7fa3c1.js"></script><script defer src="/dist/uploade9babe9f6de9716b7d86.js"></script><script defer src="/dist/admine5ad41092755f018a3c1.js"></script><script defer src="/dist/themee1bd8361b29db98744b1.js"></script><script defer src="/dist/universal900bc0c532bedfdccd93.js"></script></head>
 <body>
 	<script>
 		var multiImgMax = <?= $g['multiImgMax'];?>;

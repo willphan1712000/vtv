@@ -6,13 +6,15 @@ class Feature {
     public $time;
     public $theme;
     public $detail;
+    public $direction;
     public $bgcolor;
     public $mode;
     public $img;
-    function set($time, $theme, $detail, $bgcolor, $mode, $img) {
+    function set($time, $theme, $detail, $direction, $bgcolor, $mode, $img) {
         $this->time = $time;
         $this->theme = $theme;
         $this->detail = $detail;
+        $this->direction = $direction;
         $this->bgcolor = $bgcolor;
         $this->mode = $mode;
         $this->img = $img;
@@ -27,5 +29,5 @@ $imgArray = array();
 while($row = mysqli_fetch_assoc($imgArrayQuery)) {
     $imgArray[] = $row;
 }
-$feature->set($timeArray['time'],$themeArray['theme'],$themeArray['detail'],$themeArray['bgcolor'],$modeArray['turnon'], $imgArray);
+$feature->set($timeArray['time'],$themeArray['theme'],$themeArray['detail'], $themeArray['direction'], $themeArray['bgcolor'],$modeArray['turnon'], $imgArray);
 echo json_encode($feature);
