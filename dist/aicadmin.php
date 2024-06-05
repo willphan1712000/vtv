@@ -110,7 +110,7 @@ while($row = mysqli_fetch_array($queryTime)) {
 	<title>Admin</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/960d33c629.js" crossorigin="anonymous"></script>
-<script defer src="/dist/mainafa4b313f43ffd7fa3c1.js"></script><script defer src="/dist/admine5ad41092755f018a3c1.js"></script><script defer src="/dist/aicstyle63523c906903802b6529.js"></script><script defer src="/dist/universal900bc0c532bedfdccd93.js"></script></head>
+<script defer src="/dist/main5343d2e92565003891c2.js"></script><script defer src="/dist/admin0ad1e1688b34d1dc0040.js"></script><script defer src="/dist/aicstyle63523c906903802b6529.js"></script><script defer src="/dist/universal900bc0c532bedfdccd93.js"></script></head>
 <body>
 	<!-- ========== Uploading Progress ========== -->
 	<div id = "uploadingArea">
