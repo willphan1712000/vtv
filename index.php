@@ -1,5 +1,6 @@
 <?php
 require_once "data/core.php";
+// SystemConfig::dd(Database::connection());
 $conn = Database::connection();
 
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
